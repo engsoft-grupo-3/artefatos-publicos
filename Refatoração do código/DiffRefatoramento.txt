@@ -1,0 +1,3641 @@
+diff --git a/gpslogger/build.gradle b/gpslogger/build.gradle
+index 6a92746f..0f592863 100644
+--- a/gpslogger/build.gradle
++++ b/gpslogger/build.gradle
+@@ -7,7 +7,7 @@ buildscript {
+         }
+     }
+     dependencies {
+-        classpath 'com.android.tools.build:gradle:8.1.4'
++        classpath 'com.android.tools.build:gradle:8.5.1'
+
+         classpath 'org.jacoco:org.jacoco.core:0.8.7'
+         classpath "com.moowork.gradle:gradle-node-plugin:0.13"
+@@ -77,6 +77,9 @@ android {
+         abortOnError false
+     }
+     namespace 'com.mendhak.gpslogger'
++    buildFeatures {
++        buildConfig true
++    }
+
+
+     //Release signing key
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/GeneralLocationListener.java b/gpslogger/src/main/java/com/mendhak/gpslogger/GeneralLocationListener.java
+index 396bb8e3..8b9a28de 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/GeneralLocationListener.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/GeneralLocationListener.java
+@@ -52,6 +52,7 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener, G
+     /**
+      * Event raised when a new fix is received.
+      */
++    @Override
+     public void onLocationChanged(Location loc) {
+
+         try {
+@@ -83,28 +84,28 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener, G
+     }
+
+     public void onProviderDisabled(String provider) {
+-        LOG.info("Provider disabled: " + provider);
++        LOG.info("Provider disabled: {}", provider);
+         loggingService.restartGpsManagers();
+     }
+
+     public void onProviderEnabled(String provider) {
+
+-        LOG.info("Provider enabled: " + provider);
++        LOG.info("Provider enabled: {}", provider);
+         loggingService.restartGpsManagers();
+     }
+
+     public void onStatusChanged(String provider, int status, Bundle extras) {
+         if (status == LocationProvider.OUT_OF_SERVICE) {
+-            LOG.info(provider + " is out of service");
++            LOG.info("{} is out of service", provider);
+             loggingService.stopManagerAndResetAlarm();
+         }
+
+         if (status == LocationProvider.AVAILABLE) {
+-            LOG.info(provider + " is available");
++            LOG.info("{} is available", provider);
+         }
+
+         if (status == LocationProvider.TEMPORARILY_UNAVAILABLE) {
+-            LOG.info(provider + " is temporarily unavailable");
++            LOG.info("{} is temporarily unavailable", provider);
+         }
+     }
+
+@@ -133,7 +134,7 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener, G
+                     satellitesVisible++;
+                 }
+
+-                LOG.debug(String.valueOf(satellitesVisible) + " satellites");
++                LOG.debug("{} satellites", satellitesVisible);
+                 loggingService.setSatelliteInfo(satellitesVisible);
+                 break;
+
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/GpsLoggingService.java b/gpslogger/src/main/java/com/mendhak/gpslogger/GpsLoggingService.java
+index 5e455046..26b823eb 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/GpsLoggingService.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/GpsLoggingService.java
+@@ -49,6 +49,7 @@ import org.slf4j.Logger;
+
+ import java.io.File;
+ import java.io.IOException;
++import java.text.MessageFormat;
+ import java.text.SimpleDateFormat;
+ import java.util.Date;
+
+@@ -148,7 +149,7 @@ public class GpsLoggingService extends Service  {
+
+     @Override
+     public void onDestroy() {
+-        LOG.warn(SessionLogcatAppender.MARKER_INTERNAL, "GpsLoggingService is being destroyed by Android OS.");
++        LOG.warn(SessionLogcatAppender.markerInternal, "GpsLoggingService is being destroyed by Android OS.");
+         unregisterEventBus();
+         removeNotification();
+         super.onDestroy();
+@@ -178,134 +179,141 @@ public class GpsLoggingService extends Service  {
+             Bundle bundle = intent.getExtras();
+
+             if (bundle != null) {
++                bundleIdentify(bundle);
+
+-                if(!Systems.locationPermissionsGranted(this)){
+-                    LOG.error("User has not granted permission to access location services. Will not continue!");
+-                    Systems.showErrorNotification(this, getString(R.string.gpslogger_permissions_permanently_denied));
+-                    return;
++            } else {
++                // A null intent is passed in if the service has been killed and restarted.
++                LOG.debug("Service restarted with null intent. Were we logging previously - " + session.isStarted());
++                if (session.isStarted()) {
++                    startLogging();
+                 }
+
+-                boolean needToStartGpsManager = false;
++            }
++        }
++    }
+
+-                if (bundle.getBoolean(IntentConstants.IMMEDIATE_START)) {
+-                    LOG.info("Intent received - Start Logging Now");
+-                    EventBus.getDefault().post(new CommandEvents.RequestStartStop(true));
+-                }
++    private void bundleIdentify(Bundle bundle) {
+
+-                if (bundle.getBoolean(IntentConstants.IMMEDIATE_STOP)) {
+-                    LOG.info("Intent received - Stop logging now");
+-                    EventBus.getDefault().post(new CommandEvents.RequestStartStop(false));
+-                }
++        if(!Systems.locationPermissionsGranted(this)){
++            LOG.error("User has not granted permission to access location services. Will not continue!");
++            Systems.showErrorNotification(this, getString(R.string.gpslogger_permissions_permanently_denied));
++            return;
++        }
+
+-                if (bundle.getBoolean(IntentConstants.GET_STATUS)) {
+-                    LOG.info("Intent received - Sending Status by broadcast");
+-                    EventBus.getDefault().post(new CommandEvents.GetStatus());
+-                }
++        boolean needToStartGpsManager = false;
+
++        if (bundle.getBoolean(IntentConstants.IMMEDIATE_START)) {
++            LOG.info("Intent received - Start Logging Now");
++            EventBus.getDefault().post(new CommandEvents.RequestStartStop(true));
++        }
+
+-                if (bundle.getBoolean(IntentConstants.AUTOSEND_NOW)) {
+-                    LOG.info("Intent received - Auto Send Now");
+-                    EventBus.getDefault().post(new CommandEvents.AutoSend(null));
+-                }
++        if (bundle.getBoolean(IntentConstants.IMMEDIATE_STOP)) {
++            LOG.info("Intent received - Stop logging now");
++            EventBus.getDefault().post(new CommandEvents.RequestStartStop(false));
++        }
+
+-                if (bundle.getBoolean(IntentConstants.GET_NEXT_POINT)) {
+-                    LOG.info("Intent received - Get Next Point");
+-                    needToStartGpsManager = true;
+-                }
++        if (bundle.getBoolean(IntentConstants.GET_STATUS)) {
++            LOG.info("Intent received - Sending Status by broadcast");
++            EventBus.getDefault().post(new CommandEvents.GetStatus());
++        }
+
+-                if (bundle.getString(IntentConstants.SET_DESCRIPTION) != null) {
+-                    LOG.info("Intent received - Set Next Point Description: " + bundle.getString(IntentConstants.SET_DESCRIPTION));
+-                    EventBus.getDefault().post(new CommandEvents.Annotate(bundle.getString(IntentConstants.SET_DESCRIPTION)));
+-                }
+
+-                if(bundle.getString(IntentConstants.SWITCH_PROFILE) != null){
+-                    LOG.info("Intent received - switch profile: " + bundle.getString(IntentConstants.SWITCH_PROFILE));
+-                    EventBus.getDefault().post(new ProfileEvents.SwitchToProfile(bundle.getString(IntentConstants.SWITCH_PROFILE)));
+-                    needToStartGpsManager = session.isStarted();
+-                }
++        if (bundle.getBoolean(IntentConstants.AUTOSEND_NOW)) {
++            LOG.info("Intent received - Auto Send Now");
++            EventBus.getDefault().post(new CommandEvents.AutoSend(null));
++        }
+
+-                if (bundle.get(IntentConstants.PREFER_CELLTOWER) != null) {
+-                    boolean preferCellTower = bundle.getBoolean(IntentConstants.PREFER_CELLTOWER);
+-                    LOG.debug("Intent received - Set Prefer Cell Tower: " + String.valueOf(preferCellTower));
++        if (bundle.getBoolean(IntentConstants.GET_NEXT_POINT)) {
++            LOG.info("Intent received - Get Next Point");
++            needToStartGpsManager = true;
++        }
+
+-                    if(preferCellTower){
+-                        preferenceHelper.setShouldLogNetworkLocations(true);
+-                        preferenceHelper.setShouldLogSatelliteLocations(false);
+-                    } else {
+-                        preferenceHelper.setShouldLogSatelliteLocations(true);
+-                        preferenceHelper.setShouldLogNetworkLocations(false);
+-                    }
++        if (bundle.getString(IntentConstants.SET_DESCRIPTION) != null) {
++            LOG.info("Intent received - Set Next Point Description: {}", bundle.getString(IntentConstants.SET_DESCRIPTION));
++            EventBus.getDefault().post(new CommandEvents.Annotate(bundle.getString(IntentConstants.SET_DESCRIPTION)));
++        }
+
+-                    needToStartGpsManager = true;
+-                }
++        if(bundle.getString(IntentConstants.SWITCH_PROFILE) != null){
++            LOG.info("Intent received - switch profile: {}", bundle.getString(IntentConstants.SWITCH_PROFILE));
++            EventBus.getDefault().post(new ProfileEvents.SwitchToProfile(bundle.getString(IntentConstants.SWITCH_PROFILE)));
++            needToStartGpsManager = session.isStarted();
++        }
+
+-                if (bundle.get(IntentConstants.TIME_BEFORE_LOGGING) != null) {
+-                    int timeBeforeLogging = bundle.getInt(IntentConstants.TIME_BEFORE_LOGGING);
+-                    LOG.debug("Intent received - logging interval: " + String.valueOf(timeBeforeLogging));
+-                    preferenceHelper.setMinimumLoggingInterval(timeBeforeLogging);
+-                    needToStartGpsManager = true;
+-                }
++        if (bundle.get(IntentConstants.PREFER_CELLTOWER) != null) {
++            boolean preferCellTower = bundle.getBoolean(IntentConstants.PREFER_CELLTOWER);
++            LOG.debug("Intent received - Set Prefer Cell Tower: {}", String.valueOf(preferCellTower));
+
+-                if (bundle.get(IntentConstants.DISTANCE_BEFORE_LOGGING) != null) {
+-                    int distanceBeforeLogging = bundle.getInt(IntentConstants.DISTANCE_BEFORE_LOGGING);
+-                    LOG.debug("Intent received - Set Distance Before Logging: " + String.valueOf(distanceBeforeLogging));
+-                    preferenceHelper.setMinimumDistanceInMeters(distanceBeforeLogging);
+-                    needToStartGpsManager = true;
+-                }
++            if(preferCellTower){
++                preferenceHelper.setShouldLogNetworkLocations(true);
++                preferenceHelper.setShouldLogSatelliteLocations(false);
++            } else {
++                preferenceHelper.setShouldLogSatelliteLocations(true);
++                preferenceHelper.setShouldLogNetworkLocations(false);
++            }
+
+-                if (bundle.get(IntentConstants.GPS_ON_BETWEEN_FIX) != null) {
+-                    boolean keepBetweenFix = bundle.getBoolean(IntentConstants.GPS_ON_BETWEEN_FIX);
+-                    LOG.debug("Intent received - Set Keep Between Fix: " + String.valueOf(keepBetweenFix));
+-                    preferenceHelper.setShouldKeepGPSOnBetweenFixes(keepBetweenFix);
+-                    needToStartGpsManager = true;
+-                }
++            needToStartGpsManager = true;
++        }
+
+-                if (bundle.get(IntentConstants.RETRY_TIME) != null) {
+-                    int retryTime = bundle.getInt(IntentConstants.RETRY_TIME);
+-                    LOG.debug("Intent received - Set duration to match accuracy: " + String.valueOf(retryTime));
+-                    preferenceHelper.setLoggingRetryPeriod(retryTime);
+-                    needToStartGpsManager = true;
+-                }
++        if (bundle.get(IntentConstants.TIME_BEFORE_LOGGING) != null) {
++            int timeBeforeLogging = bundle.getInt(IntentConstants.TIME_BEFORE_LOGGING);
++            LOG.debug("Intent received - logging interval: {}", String.valueOf(timeBeforeLogging));
++            preferenceHelper.setMinimumLoggingInterval(timeBeforeLogging);
++            needToStartGpsManager = true;
++        }
+
+-                if (bundle.get(IntentConstants.ABSOLUTE_TIMEOUT) != null) {
+-                    int absoluteTimeout = bundle.getInt(IntentConstants.ABSOLUTE_TIMEOUT);
+-                    LOG.debug("Intent received - Set absolute timeout: " + String.valueOf(absoluteTimeout));
+-                    preferenceHelper.setAbsoluteTimeoutForAcquiringPosition(absoluteTimeout);
+-                    needToStartGpsManager = true;
+-                }
++        if (bundle.get(IntentConstants.DISTANCE_BEFORE_LOGGING) != null) {
++            int distanceBeforeLogging = bundle.getInt(IntentConstants.DISTANCE_BEFORE_LOGGING);
++            LOG.debug("Intent received - Set Distance Before Logging: {}", String.valueOf(distanceBeforeLogging));
++            preferenceHelper.setMinimumDistanceInMeters(distanceBeforeLogging);
++            needToStartGpsManager = true;
++        }
+
+-                if(bundle.get(IntentConstants.LOG_ONCE) != null){
+-                    boolean logOnceIntent = bundle.getBoolean(IntentConstants.LOG_ONCE);
+-                    LOG.debug("Intent received - Log Once: " + String.valueOf(logOnceIntent));
+-                    needToStartGpsManager = false;
+-                    logOnce();
+-                }
++        if (bundle.get(IntentConstants.GPS_ON_BETWEEN_FIX) != null) {
++            boolean keepBetweenFix = bundle.getBoolean(IntentConstants.GPS_ON_BETWEEN_FIX);
++            LOG.debug("Intent received - Set Keep Between Fix: {}", String.valueOf(keepBetweenFix));
++            preferenceHelper.setShouldKeepGPSOnBetweenFixes(keepBetweenFix);
++            needToStartGpsManager = true;
++        }
+
+-                try {
+-                    if(bundle.containsKey(Intent.EXTRA_ALARM_COUNT) && bundle.get(Intent.EXTRA_ALARM_COUNT) != "0"){
+-                        needToStartGpsManager = true;
+-                    }
+-                }
+-                catch (Throwable t){
+-                    LOG.warn(SessionLogcatAppender.MARKER_INTERNAL, "Received a weird EXTRA_ALARM_COUNT value. Cannot continue.");
+-                    needToStartGpsManager = false;
+-                }
++        if (bundle.get(IntentConstants.RETRY_TIME) != null) {
++            int retryTime = bundle.getInt(IntentConstants.RETRY_TIME);
++            LOG.debug("Intent received - Set duration to match accuracy: {}", String.valueOf(retryTime));
++            preferenceHelper.setLoggingRetryPeriod(retryTime);
++            needToStartGpsManager = true;
++        }
+
+-                if (needToStartGpsManager && session.isStarted()) {
+-                    startGpsManager();
+-                }
+-            }
++        if (bundle.get(IntentConstants.ABSOLUTE_TIMEOUT) != null) {
++            int absoluteTimeout = bundle.getInt(IntentConstants.ABSOLUTE_TIMEOUT);
++            LOG.debug("Intent received - Set absolute timeout: {}", absoluteTimeout);
++            preferenceHelper.setAbsoluteTimeoutForAcquiringPosition(absoluteTimeout);
++            needToStartGpsManager = true;
++        }
+
+-        } else {
+-            // A null intent is passed in if the service has been killed and restarted.
+-            LOG.debug("Service restarted with null intent. Were we logging previously - " + session.isStarted());
+-            if(session.isStarted()){
+-                startLogging();
++        if(bundle.get(IntentConstants.LOG_ONCE) != null){
++            boolean logOnceIntent = bundle.getBoolean(IntentConstants.LOG_ONCE);
++            LOG.debug("Intent received - Log Once: {}", logOnceIntent);
++            needToStartGpsManager = false;
++            logOnce();
++        }
++
++        try {
++            if(bundle.containsKey(Intent.EXTRA_ALARM_COUNT) && bundle.get(Intent.EXTRA_ALARM_COUNT) != "0"){
++                needToStartGpsManager = true;
+             }
++        }
++        catch (Throwable t){
++            LOG.warn(SessionLogcatAppender.markerInternal, "Received a weird EXTRA_ALARM_COUNT value. Cannot continue.");
++            needToStartGpsManager = false;
++        }
+
++        if (needToStartGpsManager && session.isStarted()) {
++            startGpsManager();
+         }
+     }
+
++
++
++
+     /**
+      * Sets up the auto email timers based on user preferences.
+      */
+@@ -530,18 +538,7 @@ public class GpsLoggingService extends Service  {
+
+         if (nfc == null) {
+
+-            nfc = new NotificationCompat.Builder(getApplicationContext(), NotificationChannelNames.GPSLOGGER_DEFAULT)
+-                    .setSmallIcon(R.drawable.notification)
+-                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.gpsloggericon3))
+-                    .setPriority( preferenceHelper.shouldHideNotificationFromStatusBar() ? NotificationCompat.PRIORITY_MIN : NotificationCompat.PRIORITY_LOW)
+-                    .setCategory(NotificationCompat.CATEGORY_SERVICE)
+-                    .setVisibility(preferenceHelper.shouldHideNotificationFromLockScreen() ? NotificationCompat.VISIBILITY_SECRET : NotificationCompat.VISIBILITY_PUBLIC) //This hides the notification from lock screen
+-                    .setContentTitle(contentTitle)
+-                    .setContentText(contentText)
+-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(contentText).setBigContentTitle(contentTitle))
+-                    .setOngoing(true)
+-                    .setOnlyAlertOnce(true)
+-                    .setContentIntent(pending);
++            nfc = nfcCreator(contentTitle,contentText,pending);
+
+             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                 nfc.setPriority(NotificationCompat.PRIORITY_LOW);
+@@ -563,6 +560,21 @@ public class GpsLoggingService extends Service  {
+         return nfc.build();
+     }
+
++    private NotificationCompat.Builder nfcCreator(CharSequence contentTitle, CharSequence contentText, PendingIntent pending) {
++        return new NotificationCompat.Builder(getApplicationContext(), NotificationChannelNames.GPSLOGGER_DEFAULT)
++                .setSmallIcon(R.drawable.notification)
++                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.gpsloggericon3))
++                .setPriority( preferenceHelper.shouldHideNotificationFromStatusBar() ? NotificationCompat.PRIORITY_MIN : NotificationCompat.PRIORITY_LOW)
++                .setCategory(NotificationCompat.CATEGORY_SERVICE)
++                .setVisibility(preferenceHelper.shouldHideNotificationFromLockScreen() ? NotificationCompat.VISIBILITY_SECRET : NotificationCompat.VISIBILITY_PUBLIC) //This hides the notification from LOCK screen
++                .setContentTitle(contentTitle)
++                .setContentText(contentText)
++                .setStyle(new NotificationCompat.BigTextStyle().bigText(contentText).setBigContentTitle(contentTitle))
++                .setOngoing(true)
++                .setOnlyAlertOnce(true)
++                .setContentIntent(pending);
++    }
++
+     private void showNotification(){
+         Notification notif = getNotification();
+         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+@@ -773,7 +785,7 @@ public class GpsLoggingService extends Service  {
+
+         session.setCurrentFormattedFileName(Strings.getFormattedFileName());
+
+-        LOG.info("Filename: " + Strings.getFormattedFileName());
++        LOG.info("Filename: {}", Strings.getFormattedFileName());
+         EventBus.getDefault().post(new ServiceEvents.FileNamed(Strings.getFormattedFileName()));
+
+     }
+@@ -799,9 +811,10 @@ public class GpsLoggingService extends Service  {
+      * This method in turn updates notification, writes to file, reobtains
+      * preferences, notifies main service client and resets location managers.
+      *
+-     * @param loc Location object
++     * @param location Location object
+      */
+-    void onLocationChanged(Location loc) {
++    void onLocationChanged(Location location) {
++        Location loc = location;
+         if (!session.isStarted()) {
+             LOG.debug("onLocationChanged called, but session.isStarted is false");
+             stopLogging();
+@@ -811,21 +824,54 @@ public class GpsLoggingService extends Service  {
+         boolean isPassiveLocation = loc.getExtras().getBoolean(BundleConstants.PASSIVE);
+         long currentTimeStamp = System.currentTimeMillis();
+
+-        LOG.debug("Has description? " + session.hasDescription() + ", Single point? " + session.isSinglePointMode() + ", Last timestamp: " + session.getLatestTimeStamp() + ", Current timestamp: " + currentTimeStamp);
++        LOG.debug("Has description? {}, Single point? {}, Last timestamp: {}, Current timestamp: {}",
++                  session.hasDescription(), session.isSinglePointMode(), session.getLatestTimeStamp(), currentTimeStamp);
++
++        if(verifyLocation(loc, isPassiveLocation, currentTimeStamp)) {
++            return;
++        }
+
++        LOG.debug("{},{}",loc.getLatitude(),loc.getLongitude());
++        LOG.info(SessionLogcatAppender.markerLocation, getLocationDisplayForLogs(loc));
++        loc = Locations.getLocationWithAdjustedAltitude(loc, preferenceHelper);
++        loc = Locations.getLocationAdjustedForGPSWeekRollover(loc);
++        resetCurrentFileName(false);
++        session.setLatestTimeStamp(System.currentTimeMillis());
++        session.setFirstRetryTimeStamp(0);
++        session.setCurrentLocationInfo(loc);
++        setDistanceTraveled(loc);
++        showNotification();
++
++        if(isPassiveLocation){
++            LOG.debug("Logging passive location to file");
++        }
++
++        writeToFile(loc);
++        resetAutoSendTimersIfNecessary();
++        stopManagerAndResetAlarm();
++
++        EventBus.getDefault().post(new ServiceEvents.LocationUpdate(loc));
++
++        if (session.isSinglePointMode()) {
++            LOG.debug("Single point mode - stopping now");
++            stopLogging();
++        }
++    }
++
++    private boolean verifyLocation(Location loc, boolean isPassiveLocation, long currentTimeStamp) {
+         // Don't log a point until the user-defined time has elapsed
+         // However, if user has set an annotation, just log the point, disregard time and distance filters
+         // However, if it's a passive location, disregard the time filter
+         if (!isPassiveLocation && !session.hasDescription() && !session.isSinglePointMode() && (currentTimeStamp - session.getLatestTimeStamp()) < (preferenceHelper.getMinimumLoggingInterval() * 1000)) {
+             LOG.debug("Received location, but minimum logging interval has not passed. Ignoring.");
+-            return;
++            return true;
+         }
+
+         // Even if it's a passive location, the time should be greater than the previous location's time.
+         if(isPassiveLocation && session.getPreviousLocationInfo() != null && loc.getTime() <= session.getPreviousLocationInfo().getTime()){
+-            LOG.debug("Passive location time: " + loc.getTime() + ", previous location's time: " + session.getPreviousLocationInfo().getTime());
++            LOG.debug("Passive location time: {}, previous location''s time: {}", loc.getTime(), session.getPreviousLocationInfo().getTime());
+             LOG.debug("Passive location received, but its time was less than the previous point's time.");
+-            return;
++            return true;
+         }
+
+
+@@ -833,24 +879,24 @@ public class GpsLoggingService extends Service  {
+         // However, if user has set an annotation, just log the point, disregard time and distance filters
+         if(userHasBeenStillForTooLong()) {
+             LOG.info("Received location, but the user hasn't moved. Ignoring.");
+-            return;
++            return true;
+         }
+
+         // Check that it's a user selected valid listener, even if it's a passive location.
+         // In other words, if user wants satellite only, then don't log passive network locations.
+         if(!isFromSelectedListener(loc)){
+             LOG.debug("Received location, but it's not from a selected listener. Ignoring.");
+-            return;
++            return true;
+         }
+
+         //Check if a ridiculous distance has been travelled since previous point - could be a bad GPS jump
+-        if(session.getCurrentLocationInfo() != null){
++        if (session.getCurrentLocationInfo() != null) {
+             double distanceTravelled = Maths.calculateDistance(loc.getLatitude(), loc.getLongitude(), session.getCurrentLocationInfo().getLatitude(), session.getCurrentLocationInfo().getLongitude());
+-            long timeDifference = (int)Math.abs(loc.getTime() - session.getCurrentLocationInfo().getTime())/1000;
++            long timeDifference = (int) Math.abs(loc.getTime() - session.getCurrentLocationInfo().getTime()) / 1000;
+
+-            if( timeDifference > 0 && (distanceTravelled/timeDifference) > 357){ //357 m/s ~=  1285 km/h
+-                LOG.warn(String.format("Very large jump detected - %d meters in %d sec - discarding point", (long)distanceTravelled, timeDifference));
+-                return;
++            if (timeDifference > 0 && (distanceTravelled / timeDifference) > 357) { //357 m/s ~=  1285 km/h
++                LOG.warn("Very large jump detected - {} meters in {} sec - discarding point", (long) distanceTravelled, timeDifference);
++                return true;
+             }
+         }
+
+@@ -860,7 +906,7 @@ public class GpsLoggingService extends Service  {
+
+             if(!loc.hasAccuracy() || loc.getAccuracy() == 0){
+                 LOG.debug("Received location, but it has no accuracy value. Ignoring.");
+-                return;
++                return true;
+             }
+
+             if (preferenceHelper.getMinimumAccuracy() < Math.abs(loc.getAccuracy())) {
+@@ -870,19 +916,19 @@ public class GpsLoggingService extends Service  {
+                 }
+
+                 if (currentTimeStamp - session.getFirstRetryTimeStamp() <= preferenceHelper.getLoggingRetryPeriod() * 1000) {
+-                    LOG.warn("Only accuracy of " + String.valueOf(loc.getAccuracy()) + " m. Point discarded." + getString(R.string.inaccurate_point_discarded));
++                    LOG.warn("Only accuracy of {} m. Point discarded.{}", loc.getAccuracy(), getString(R.string.inaccurate_point_discarded));
+                     //return and keep trying
+-                    return;
++                    return true;
+                 }
+
+                 if (currentTimeStamp - session.getFirstRetryTimeStamp() > preferenceHelper.getLoggingRetryPeriod() * 1000) {
+-                    LOG.warn("Only accuracy of " + String.valueOf(loc.getAccuracy()) + " m and timeout reached." + getString(R.string.inaccurate_point_discarded));
++                    LOG.warn("Only accuracy of {} m and timeout reached.{}", loc.getAccuracy(), getString(R.string.inaccurate_point_discarded));
+                     //Give up for now
+                     stopManagerAndResetAlarm();
+
+                     //reset timestamp for next time.
+                     session.setFirstRetryTimeStamp(0);
+-                    return;
++                    return true;
+                 }
+
+                 //Success, reset timestamp for next time.
+@@ -901,18 +947,18 @@ public class GpsLoggingService extends Service  {
+                 }
+
+                 if(session.getTemporaryLocationForBestAccuracy() == null || loc.getAccuracy() < session.getTemporaryLocationForBestAccuracy().getAccuracy()){
+-                    LOG.debug("New point with accuracy of " + String.valueOf(loc.getAccuracy()) + " m." );
++                    LOG.debug("New point with accuracy of {} m." ,loc.getAccuracy());
+                     session.setTemporaryLocationForBestAccuracy(loc);
+                 }
+
+                 if (currentTimeStamp - session.getFirstRetryTimeStamp() <= preferenceHelper.getLoggingRetryPeriod() * 1000) {
+                     // return and keep trying
+-                    return;
++                    return true;
+                 }
+
+                 if (currentTimeStamp - session.getFirstRetryTimeStamp() > preferenceHelper.getLoggingRetryPeriod() * 1000) {
+                     // We've reached the end of the retry period, use the best point we've got so far.
+-                    LOG.debug("Retry timeout reached, using best point so far with accuracy of " + String.valueOf(session.getTemporaryLocationForBestAccuracy().getAccuracy()) + " m.");
++                    LOG.debug("Retry timeout reached, using best point so far with accuracy of {} m.", session.getTemporaryLocationForBestAccuracy().getAccuracy());
+                     loc = session.getTemporaryLocationForBestAccuracy();
+
+                     //reset for next time
+@@ -935,36 +981,10 @@ public class GpsLoggingService extends Service  {
+             if (preferenceHelper.getMinimumDistanceInterval() > distanceTraveled) {
+                 LOG.warn(String.format(getString(R.string.not_enough_distance_traveled), String.valueOf(Math.floor(distanceTraveled))) + ", point discarded");
+                 stopManagerAndResetAlarm();
+-                return;
++                return true;
+             }
+         }
+-
+-
+-        LOG.debug(String.valueOf(loc.getLatitude()) + "," + String.valueOf(loc.getLongitude()));
+-        LOG.info(SessionLogcatAppender.MARKER_LOCATION, getLocationDisplayForLogs(loc));
+-        loc = Locations.getLocationWithAdjustedAltitude(loc, preferenceHelper);
+-        loc = Locations.getLocationAdjustedForGPSWeekRollover(loc);
+-        resetCurrentFileName(false);
+-        session.setLatestTimeStamp(System.currentTimeMillis());
+-        session.setFirstRetryTimeStamp(0);
+-        session.setCurrentLocationInfo(loc);
+-        setDistanceTraveled(loc);
+-        showNotification();
+-
+-        if(isPassiveLocation){
+-            LOG.debug("Logging passive location to file");
+-        }
+-
+-        writeToFile(loc);
+-        resetAutoSendTimersIfNecessary();
+-        stopManagerAndResetAlarm();
+-
+-        EventBus.getDefault().post(new ServiceEvents.LocationUpdate(loc));
+-
+-        if (session.isSinglePointMode()) {
+-            LOG.debug("Single point mode - stopping now");
+-            stopLogging();
+-        }
++        return false;
+     }
+
+     private String getLocationDisplayForLogs(Location loc) {
+@@ -1157,7 +1177,7 @@ public class GpsLoggingService extends Service  {
+             LOG.debug("Clearing annotation");
+             session.clearDescription();
+         } else {
+-            LOG.debug("Pending annotation: " + desc);
++            LOG.debug("Pending annotation: {}", desc);
+             session.setDescription(desc);
+             EventBus.getDefault().post(new ServiceEvents.AnnotationStatus(false));
+
+@@ -1193,7 +1213,7 @@ public class GpsLoggingService extends Service  {
+
+             boolean isCurrentProfile = preferenceHelper.getCurrentProfileName().equals(switchToProfileEvent.newProfileName);
+
+-            LOG.debug("Switching to profile: " + switchToProfileEvent.newProfileName);
++            LOG.debug("Switching to profile: {}", switchToProfileEvent.newProfileName);
+
+             if(!isCurrentProfile){
+                 //Save the current settings to a file (overwrite)
+@@ -1210,7 +1230,7 @@ public class GpsLoggingService extends Service  {
+
+             //Switch current profile name
+             preferenceHelper.setCurrentProfileName(switchToProfileEvent.newProfileName);
+-            LOG.info("Switched to profile: " + switchToProfileEvent.newProfileName);
++            LOG.info("Switched to profile: {}", switchToProfileEvent.newProfileName);
+
+         } catch (IOException e) {
+             LOG.error("Could not save profile to file", e);
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/GpsMainActivity.java b/gpslogger/src/main/java/com/mendhak/gpslogger/GpsMainActivity.java
+index ad8a1a57..68b5d31c 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/GpsMainActivity.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/GpsMainActivity.java
+@@ -22,7 +22,6 @@ package com.mendhak.gpslogger;
+
+ import android.Manifest;
+ import android.annotation.SuppressLint;
+-import android.app.Activity;
+ import android.content.ComponentName;
+ import android.content.Context;
+ import android.content.Intent;
+@@ -189,7 +188,7 @@ public class GpsMainActivity extends AppCompatActivity
+     private final ActivityResultLauncher<String> backgroundPermissionLauncher =
+             registerForActivityResult(new ActivityResultContracts.RequestPermission(),
+                     grantResults -> {
+-                        LOG.debug("Launcher result: " + grantResults.toString());
++                        LOG.debug("Launcher result: {}", grantResults.toString());
+                         if (grantResults) {
+                             LOG.debug("Background permissions granted. Now request ignoring battery optimizations");
+                             askUserToDisableBatteryOptimization();
+@@ -203,7 +202,7 @@ public class GpsMainActivity extends AppCompatActivity
+     private final ActivityResultLauncher<String[]> basicPermissionsLauncher =
+             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
+                     grantResults -> {
+-                        LOG.debug("Launcher result: " + grantResults.toString());
++                        LOG.debug("Launcher result: {}", grantResults.toString());
+                         if (grantResults.containsValue(false)) {
+                             LOG.warn("At least one of the permissions was not granted");
+                             Dialogs.alert(getString(R.string.gpslogger_permissions_rationale_title), getString(R.string.gpslogger_permissions_permanently_denied), this);
+@@ -258,32 +257,7 @@ public class GpsMainActivity extends AppCompatActivity
+     public boolean onResult(@NonNull String dialogTag, int which, @NonNull Bundle extras) {
+         LOG.debug(dialogTag);
+         if (dialogTag.equalsIgnoreCase("PERMISSIONS_START")){
+-            switch(which){
+-                case BUTTON_NEUTRAL:
+-                    String url = "https://gpslogger.app/privacypolicy.html";
+-                    Intent i = new Intent(Intent.ACTION_VIEW);
+-                    i.setData(Uri.parse(url));
+-                    startActivity(i);
+-                    return true;
+-                case BUTTON_POSITIVE:
+-                    LOG.debug("Beginning request for multiple permissions");
+-                    ArrayList<String> permissions = new ArrayList<String>();
+-                    permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+-                    permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+-                    permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+-                    permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+-                        permissions.add(Manifest.permission.POST_NOTIFICATIONS);
+-                    }
+-
+-                    if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+-                        // Only on Android 10 (Q), the permission dialog can include an 'Allow all the time'
+-                        permissions.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+-                    }
+-                    basicPermissionsLauncher.launch(permissions.toArray(new String[0]));
+-                    return true;
+-            }
+-            return true;
++            return buttonPermisson(which);
+         }
+
+         if(dialogTag.equalsIgnoreCase("BACKGROUND_LOCATION") && which == BUTTON_POSITIVE){
+@@ -296,8 +270,8 @@ public class GpsMainActivity extends AppCompatActivity
+
+             String profileName = extras.getString("NEW_PROFILE_NAME");
+             if(!Strings.isNullOrEmpty(profileName)) {
+-                final String[] ReservedChars = {"|", "\\", "?", "*", "<", "\"", ":", ">", ".", "/", "'", ";"};
+-                for (String c : ReservedChars) {
++                final String[] reservedChars = {"|", "\\", "?", "*", "<", "\"", ":", ">", ".", "/", "'", ";"};
++                for (String c : reservedChars) {
+                     profileName = profileName.replace(c,"");
+                 }
+                 EventBus.getDefault().post(new ProfileEvents.CreateNewProfile(profileName));
+@@ -322,7 +296,7 @@ public class GpsMainActivity extends AppCompatActivity
+             String enteredText = extras.getString("annotations");
+             //Replace all whitespace and newlines, with single space
+             enteredText = enteredText.replaceAll("\\s+"," ");
+-            LOG.info("Annotation entered : " + enteredText);
++            LOG.info("Annotation entered : {}", enteredText);
+             EventBus.getDefault().post(new CommandEvents.Annotate(enteredText));
+             Files.addItemToCacheFile(enteredText, "annotations", GpsMainActivity.this);
+             return true;
+@@ -356,10 +330,10 @@ public class GpsMainActivity extends AppCompatActivity
+             List<File> chosenFiles = new ArrayList<>();
+             ArrayList<String> selectedItems = extras.getStringArrayList(SimpleListDialog.SELECTED_LABELS);
+             for (String item : selectedItems) {
+-                LOG.info("Selected file to upload- " + item);
++                LOG.info("Selected file to upload- {}", item);
+                 chosenFiles.add(new File(gpxFolder, item));
+             }
+-            LOG.info("Using sender: " + senderName);
++            LOG.info("Using sender: {}", senderName);
+
+             if (chosenFiles.size() > 0) {
+                 Dialogs.progress(GpsMainActivity.this, getString(R.string.please_wait));
+@@ -441,6 +415,35 @@ public class GpsMainActivity extends AppCompatActivity
+         return false;
+     }
+
++    private boolean buttonPermisson(int which) {
++        switch(which){
++            case BUTTON_NEUTRAL:
++                String url = "https://gpslogger.app/privacypolicy.html";
++                Intent i = new Intent(Intent.ACTION_VIEW);
++                i.setData(Uri.parse(url));
++                startActivity(i);
++                return true;
++            case BUTTON_POSITIVE:
++                LOG.debug("Beginning request for multiple permissions");
++                ArrayList<String> permissions = new ArrayList<String>();
++                permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
++                permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
++                permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
++                permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
++                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
++                    permissions.add(Manifest.permission.POST_NOTIFICATIONS);
++                }
++
++                if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
++                    // Only on Android 10 (Q), the permission dialog can include an 'Allow all the time'
++                    permissions.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
++                }
++                basicPermissionsLauncher.launch(permissions.toArray(new String[0]));
++                return true;
++        }
++        return true;
++    }
++
+     private void setOpenStreetMapPreferencesFromDialogPrompt(Bundle extras) {
+         if(extras.containsKey(PreferenceNames.OPENSTREETMAP_TAGS)){
+             String chosenOsmTags = extras.getString(PreferenceNames.OPENSTREETMAP_TAGS);
+@@ -511,7 +514,8 @@ public class GpsMainActivity extends AppCompatActivity
+
+
+     @Override
+-    public void onSaveInstanceState(Bundle outState) {
++    public void onSaveInstanceState(Bundle state) {
++        Bundle outState = state;
+
+         //Save the drawer's selected values to bundle
+         //useful if activity recreated due to rotation
+@@ -871,43 +875,43 @@ public class GpsMainActivity extends AppCompatActivity
+
+                 switch (iDrawerItem.getIdentifier()) {
+                     case 1000:
+-                        launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.GENERAL);
++                        launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.GENERAL);
+                         break;
+                     case 1001:
+-                        launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.LOGGING);
++                        launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.LOGGING);
+                         break;
+                     case 1002:
+-                        launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.PERFORMANCE);
++                        launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.PERFORMANCE);
+                         break;
+                     case 1003:
+-                        launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.UPLOAD);
++                        launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.UPLOAD);
+                         break;
+                     case 1005:
+-                        launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.DROPBOX);
++                        launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.DROPBOX);
+                         break;
+                     case 1006:
+-                        launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.EMAIL);
++                        launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.EMAIL);
+                         break;
+                     case 1007:
+-                        launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.FTP);
++                        launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.FTP);
+                         break;
+                     case 1008:
+-                        launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.OPENGTS);
++                        launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.OPENGTS);
+                         break;
+                     case 1009:
+-                        launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.OSM);
++                        launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.OSM);
+                         break;
+                     case 1010:
+-                        launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.OWNCLOUD);
++                        launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.OWNCLOUD);
+                         break;
+                     case 1011:
+-                        launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.GOOGLEDRIVE);
++                        launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.GOOGLEDRIVE);
+                         break;
+                     case 1015:
+-                        launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.SFTP);
++                        launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.SFTP);
+                         break;
+                     case 1020:
+-                        launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.CUSTOMURL);
++                        launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.CUSTOMURL);
+                         break;
+                     case 9000:
+                         Intent faqtivity = new Intent(getApplicationContext(), Faqtivity.class);
+@@ -941,7 +945,7 @@ public class GpsMainActivity extends AppCompatActivity
+
+     private void populateProfilesList() {
+
+-        LOG.debug("Current profile:" + preferenceHelper.getCurrentProfileName());
++        LOG.debug("Current profile:{}", preferenceHelper.getCurrentProfileName());
+
+         drawerHeader.clear();
+
+@@ -1180,7 +1184,7 @@ public class GpsMainActivity extends AppCompatActivity
+         // as you specify a parent activity in AndroidManifest.xml.
+         int id = item.getItemId();
+
+-        LOG.debug("Menu Item: " + String.valueOf(item.getTitle()));
++        LOG.debug("Menu Item: {}", String.valueOf(item.getTitle()));
+
+         switch (id) {
+             case R.id.mnuAnnotate:
+@@ -1235,7 +1239,7 @@ public class GpsMainActivity extends AppCompatActivity
+             EventBus.getDefault().post(new CommandEvents.AutoSend(null));
+
+         } else {
+-            launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.UPLOAD);
++            launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.UPLOAD);
+         }
+     }
+
+@@ -1266,7 +1270,7 @@ public class GpsMainActivity extends AppCompatActivity
+
+     private void uploadToOpenStreetMap() {
+         if (!FileSenderFactory.getOsmSender().isAvailable()) {
+-            launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.OSM);
++            launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.OSM);
+             return;
+         }
+
+@@ -1275,7 +1279,7 @@ public class GpsMainActivity extends AppCompatActivity
+
+     private void uploadToGoogleDrive() {
+         if(!FileSenderFactory.getGoogleDriveSender().isAvailable()){
+-            launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.GOOGLEDRIVE);
++            launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.GOOGLEDRIVE);
+             return;
+         }
+
+@@ -1285,7 +1289,7 @@ public class GpsMainActivity extends AppCompatActivity
+     private void uploadToDropBox() {
+
+         if (!FileSenderFactory.getDropBoxSender().isAvailable()) {
+-            launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.DROPBOX);
++            launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.DROPBOX);
+             return;
+         }
+
+@@ -1295,7 +1299,7 @@ public class GpsMainActivity extends AppCompatActivity
+
+     private void uploadToCustomURL(){
+         if(!FileSenderFactory.getCustomUrlSender().isAvailable()){
+-            launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.CUSTOMURL);
++            launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.CUSTOMURL);
+             return;
+         }
+
+@@ -1304,7 +1308,7 @@ public class GpsMainActivity extends AppCompatActivity
+
+     private void uploadToSFTP(){
+         if(!FileSenderFactory.getSFTPSender().isAvailable()){
+-            launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.SFTP);
++            launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.SFTP);
+             return;
+         }
+
+@@ -1314,7 +1318,7 @@ public class GpsMainActivity extends AppCompatActivity
+     private void uploadToOwnCloud() {
+
+         if (!FileSenderFactory.getOwnCloudSender().isAvailable()) {
+-            launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.OWNCLOUD);
++            launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.OWNCLOUD);
+             return;
+         }
+
+@@ -1323,7 +1327,7 @@ public class GpsMainActivity extends AppCompatActivity
+
+     private void sendToOpenGTS() {
+         if (!FileSenderFactory.getOpenGTSSender().isAvailable()) {
+-            launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.OPENGTS);
++            launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.OPENGTS);
+         } else {
+             showFileListDialog(FileSenderFactory.getOpenGTSSender());
+         }
+@@ -1333,7 +1337,7 @@ public class GpsMainActivity extends AppCompatActivity
+
+     private void sendToFtp() {
+         if (!FileSenderFactory.getFtpSender().isAvailable()) {
+-            launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.FTP);
++            launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.FTP);
+         } else {
+             showFileListDialog(FileSenderFactory.getFtpSender());
+         }
+@@ -1341,7 +1345,7 @@ public class GpsMainActivity extends AppCompatActivity
+
+     private void selectAndEmailFile() {
+         if (!FileSenderFactory.getEmailSender().isAvailable()) {
+-            launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.EMAIL);
++            launchPreferenceScreen(MainPreferenceActivity.PreferenceFragments.EMAIL);
+         } else {
+             showFileListDialog(FileSenderFactory.getEmailSender());
+         }
+@@ -1523,7 +1527,7 @@ public class GpsMainActivity extends AppCompatActivity
+                 unbindService(gpsServiceConnection);
+                 session.setBoundToService(false);
+             } catch (Exception e) {
+-                LOG.warn(SessionLogcatAppender.MARKER_INTERNAL, "Could not unbind service", e);
++                LOG.warn(SessionLogcatAppender.markerInternal, "Could not unbind service", e);
+             }
+         }
+
+@@ -1559,7 +1563,7 @@ public class GpsMainActivity extends AppCompatActivity
+
+     @EventBusHook
+     public void onEventMainThread(UploadEvents.OpenGTS upload){
+-        LOG.debug("Open GTS Event completed, success: " + upload.success);
++        LOG.debug("Open GTS Event completed, success: {}", upload.success);
+         Dialogs.hideProgress();
+
+         if(!upload.success){
+@@ -1576,13 +1580,11 @@ public class GpsMainActivity extends AppCompatActivity
+
+     @EventBusHook
+     public void onEventMainThread(UploadEvents.CustomUrl upload){
+-        LOG.debug("Custom URL Event completed, success: " + upload.success);
++        LOG.debug("Custom URL Event completed, success: {}", upload.success);
+         Dialogs.hideProgress();
+
+         if(!upload.success){
+-            LOG.error(getString(R.string.log_customurl_setup_title)
+-                    + "-"
+-                    + getString(R.string.upload_failure));
++            LOG.error("{}-{}", getString(R.string.log_customurl_setup_title), getString(R.string.upload_failure));
+
+             if(userInvokedUpload){
+                 Dialogs.showError(getString(R.string.sorry), getString(R.string.upload_failure), upload.message, upload.throwable, this);
+@@ -1597,9 +1599,7 @@ public class GpsMainActivity extends AppCompatActivity
+         Dialogs.hideProgress();
+
+         if(!upload.success){
+-            LOG.error(getString(R.string.autoemail_title)
+-                    + "-"
+-                    + getString(R.string.upload_failure));
++            LOG.error("{}-{}", getString(R.string.autoemail_title), getString(R.string.upload_failure));
+             if(userInvokedUpload){
+                 Dialogs.showError(getString(R.string.sorry), getString(R.string.upload_failure), upload.message, upload.throwable, this);
+                 userInvokedUpload = false;
+@@ -1629,9 +1629,7 @@ public class GpsMainActivity extends AppCompatActivity
+         Dialogs.hideProgress();
+
+         if(!upload.success){
+-            LOG.error(getString(R.string.dropbox_setup_title)
+-                    + "-"
+-                    + getString(R.string.upload_failure));
++            LOG.error("{}-{}", getString(R.string.dropbox_setup_title), getString(R.string.upload_failure));
+             if(userInvokedUpload){
+                 Dialogs.showError(getString(R.string.sorry), getString(R.string.upload_failure), upload.message, upload.throwable, this);
+                 userInvokedUpload = false;
+@@ -1645,9 +1643,7 @@ public class GpsMainActivity extends AppCompatActivity
+         Dialogs.hideProgress();
+
+         if(!upload.success){
+-            LOG.error(getString(R.string.google_drive_setup_title)
+-                    + "-"
+-                    + getString(R.string.upload_failure));
++            LOG.error("{}-{}", getString(R.string.google_drive_setup_title), getString(R.string.upload_failure));
+             if(userInvokedUpload){
+                 Dialogs.showError(getString(R.string.sorry), getString(R.string.upload_failure), upload.message, upload.throwable, this);
+                 userInvokedUpload = false;
+@@ -1657,13 +1653,11 @@ public class GpsMainActivity extends AppCompatActivity
+
+     @EventBusHook
+     public void onEventMainThread(UploadEvents.Ftp upload){
+-        LOG.debug("FTP Event completed, success: " + upload.success);
++        LOG.debug("FTP Event completed, success: {}", upload.success);
+         Dialogs.hideProgress();
+
+         if(!upload.success){
+-            LOG.error(getString(R.string.autoftp_setup_title)
+-                    + "-"
+-                    + getString(R.string.upload_failure));
++            LOG.error("{}-{}", getString(R.string.autoftp_setup_title), getString(R.string.upload_failure));
+             if(userInvokedUpload){
+                 Dialogs.showError(getString(R.string.sorry), getString(R.string.upload_failure), upload.message, upload.throwable, this);
+                 userInvokedUpload = false;
+@@ -1674,7 +1668,7 @@ public class GpsMainActivity extends AppCompatActivity
+     @EventBusHook
+     public void onEventMainThread(UploadEvents.SFTP upload){
+
+-        LOG.debug("SFTP Event completed, success: " + upload.success);
++        LOG.debug("SFTP Event completed, success: {}", upload.success);
+         Dialogs.hideProgress();
+
+         if(!upload.success){
+@@ -1754,7 +1748,7 @@ public class GpsMainActivity extends AppCompatActivity
+         try {
+             final String profileName = Files.getBaseName(downloadProfileEvent.profileUrl);
+             File destFile =  new File(Files.storageFolder(getApplicationContext()) + "/" + profileName + ".properties");
+-            Files.DownloadFromUrl(downloadProfileEvent.profileUrl, destFile);
++            Files.downloadFromUrl(downloadProfileEvent.profileUrl, destFile);
+
+             LOG.debug("Posting to other events");
+             EventBus.getDefault().post(new ProfileEvents.SwitchToProfile(profileName));
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/MainPreferenceActivity.java b/gpslogger/src/main/java/com/mendhak/gpslogger/MainPreferenceActivity.java
+index c41b5e0b..1fd5f68c 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/MainPreferenceActivity.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/MainPreferenceActivity.java
+@@ -53,7 +53,7 @@ public class MainPreferenceActivity extends AppCompatActivity {
+             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+         }
+
+-        String whichFragment = PREFERENCE_FRAGMENTS.GENERAL;
++        String whichFragment = PreferenceFragments.GENERAL;
+
+         if(getIntent().getExtras() != null) {
+            whichFragment = getIntent().getExtras().getString("preference_fragment");
+@@ -61,60 +61,60 @@ public class MainPreferenceActivity extends AppCompatActivity {
+
+         //If OpenStreetMap has returned with OAuth token
+         if(getIntent().getData() != null) {
+-            LOG.debug("OSM Authorization returned: " + getIntent().getData().getQuery());
+-            whichFragment = PREFERENCE_FRAGMENTS.OSM;
++            LOG.debug("OSM Authorization returned: {}", getIntent().getData().getQuery());
++            whichFragment = PreferenceFragments.OSM;
+         }
+
+         switch(whichFragment){
+-            case PREFERENCE_FRAGMENTS.GENERAL:
++            case PreferenceFragments.GENERAL:
+                 setTitle(R.string.settings_screen_name);
+                 preferenceFragmentCompat = new GeneralSettingsFragment();
+                 break;
+-            case PREFERENCE_FRAGMENTS.LOGGING:
++            case PreferenceFragments.LOGGING:
+                 setTitle(R.string.pref_logging_title);
+                 preferenceFragmentCompat = new LoggingSettingsFragment();
+                 break;
+-            case PREFERENCE_FRAGMENTS.PERFORMANCE:
++            case PreferenceFragments.PERFORMANCE:
+                 setTitle(R.string.pref_performance_title);
+                 preferenceFragmentCompat = new PerformanceSettingsFragment();
+                 break;
+-            case PREFERENCE_FRAGMENTS.UPLOAD:
++            case PreferenceFragments.UPLOAD:
+                 setTitle(R.string.title_drawer_uploadsettings);
+                 preferenceFragmentCompat = new UploadSettingsFragment();
+                 break;
+-            case PREFERENCE_FRAGMENTS.FTP:
++            case PreferenceFragments.FTP:
+                 setTitle(R.string.autoftp_setup_title);
+                 preferenceFragmentCompat = new FtpFragment();
+                 break;
+-            case PREFERENCE_FRAGMENTS.EMAIL:
++            case PreferenceFragments.EMAIL:
+                 setTitle(R.string.autoemail_title);
+                 preferenceFragmentCompat = new AutoEmailFragment();
+                 break;
+-            case PREFERENCE_FRAGMENTS.OPENGTS:
++            case PreferenceFragments.OPENGTS:
+                 setTitle(R.string.opengts_setup_title);
+                 preferenceFragmentCompat = new OpenGTSFragment();
+                 break;
+-            case PREFERENCE_FRAGMENTS.CUSTOMURL:
++            case PreferenceFragments.CUSTOMURL:
+                 setTitle(R.string.log_customurl_title);
+                 preferenceFragmentCompat = new CustomUrlFragment();
+                 break;
+-            case PREFERENCE_FRAGMENTS.DROPBOX:
++            case PreferenceFragments.DROPBOX:
+                 setTitle(R.string.dropbox_setup_title);
+                 preferenceFragmentCompat = new DropboxAuthorizationFragment();
+                 break;
+-            case PREFERENCE_FRAGMENTS.GOOGLEDRIVE:
++            case PreferenceFragments.GOOGLEDRIVE:
+                 setTitle("Google Drive");
+                 preferenceFragmentCompat = new GoogleDriveSettingsFragment();
+                 break;
+-            case PREFERENCE_FRAGMENTS.OSM:
++            case PreferenceFragments.OSM:
+                 setTitle(R.string.osm_setup_title);
+                 preferenceFragmentCompat = new OSMAuthorizationFragment();
+                 break;
+-            case PREFERENCE_FRAGMENTS.OWNCLOUD:
++            case PreferenceFragments.OWNCLOUD:
+                 setTitle(R.string.owncloud_setup_title);
+                 preferenceFragmentCompat = new OwnCloudSettingsFragment();
+                 break;
+-            case PREFERENCE_FRAGMENTS.SFTP:
++            case PreferenceFragments.SFTP:
+                 setTitle(R.string.sftp_setup_title);
+                 preferenceFragmentCompat = new SFTPSettingsFragment();
+                 break;
+@@ -153,7 +153,7 @@ public class MainPreferenceActivity extends AppCompatActivity {
+
+     }
+
+-    public static class PREFERENCE_FRAGMENTS {
++    public static class PreferenceFragments {
+         public static final String GENERAL = "GeneralSettingsFragment";
+         public static final String LOGGING = "LoggingSettingsFragment";
+         public static final String PERFORMANCE = "PerformanceSettingsFragment";
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/MyPackageUpgradeReceiver.java b/gpslogger/src/main/java/com/mendhak/gpslogger/MyPackageUpgradeReceiver.java
+index 11dcba77..2b0a7447 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/MyPackageUpgradeReceiver.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/MyPackageUpgradeReceiver.java
+@@ -38,7 +38,7 @@ public class MyPackageUpgradeReceiver extends BroadcastReceiver {
+     public void onReceive(Context context, Intent intent) {
+         try {
+             boolean shouldResumeLogging = Session.getInstance().isStarted();
+-            LOG.debug("Package has been replaced. Should resume logging: " + shouldResumeLogging);
++            LOG.debug("Package has been replaced. Should resume logging: {}", shouldResumeLogging);
+
+             if(shouldResumeLogging){
+                 EventBus.getDefault().post(new CommandEvents.RequestStartStop(true));
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/NotificationAnnotationActivity.java b/gpslogger/src/main/java/com/mendhak/gpslogger/NotificationAnnotationActivity.java
+index c58b0d68..f68a1def 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/NotificationAnnotationActivity.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/NotificationAnnotationActivity.java
+@@ -72,7 +72,7 @@ public class NotificationAnnotationActivity extends AppCompatActivity implements
+             String enteredText = extras.getString("annotations");
+             //Replace all whitespace and newlines, with single space
+             enteredText = enteredText.replaceAll("\\s+"," ");
+-            LOG.info("Notification Annotation entered : " + enteredText);
++             LOG.info("Notification Annotation entered : {}", enteredText);
+             Intent serviceIntent = new Intent(getApplicationContext(), GpsLoggingService.class);
+             serviceIntent.putExtra(IntentConstants.SET_DESCRIPTION, enteredText);
+             ContextCompat.startForegroundService(getApplicationContext(),  serviceIntent);
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/ProfileLinkReceiverActivity.java b/gpslogger/src/main/java/com/mendhak/gpslogger/ProfileLinkReceiverActivity.java
+index 5b1b9fd2..a6278704 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/ProfileLinkReceiverActivity.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/ProfileLinkReceiverActivity.java
+@@ -28,14 +28,14 @@ public class ProfileLinkReceiverActivity extends AppCompatActivity {
+         Intent intent = getIntent();
+         final String propertiesUrl = intent.getDataString().replace("gpslogger://properties/","");
+
+-        LOG.info("Received a gpslogger properties file URL to be handled. " + propertiesUrl);
++        LOG.info("Received a gpslogger properties file URL to be handled. {}", propertiesUrl);
+
+         Dialogs.progress(ProfileLinkReceiverActivity.this,getString(R.string.please_wait));
+         new Thread(new DownloadProfileRunner(propertiesUrl)).start();
+
+     }
+
+-    private class DownloadProfileRunner implements Runnable{
++    private final class DownloadProfileRunner implements Runnable{
+
+         private String url;
+
+@@ -49,7 +49,7 @@ public class ProfileLinkReceiverActivity extends AppCompatActivity {
+             try {
+                 final String profileName = Files.getBaseName(url);
+                 File destFile =  new File(Files.storageFolder(getApplicationContext()) + "/" + profileName + ".properties");
+-                Files.DownloadFromUrl(url, destFile);
++                Files.downloadFromUrl(url, destFile);
+                 handler.post(new Runnable() {
+                     @Override
+                     public void run() {
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/RestarterReceiver.java b/gpslogger/src/main/java/com/mendhak/gpslogger/RestarterReceiver.java
+index c8025a59..35374ce3 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/RestarterReceiver.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/RestarterReceiver.java
+@@ -18,7 +18,7 @@ public class RestarterReceiver extends BroadcastReceiver {
+     public void onReceive(Context context, Intent intent) {
+         LOG.warn("GPSLogger service is being killed, broadcast received. Attempting to restart");
+         boolean wasRunning = intent.getBooleanExtra("was_running", false);
+-        LOG.info("was_running:" + wasRunning);
++        LOG.info("was_running:{}", wasRunning);
+
+         Intent serviceIntent = new Intent(context, GpsLoggingService.class);
+
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/StartupReceiver.java b/gpslogger/src/main/java/com/mendhak/gpslogger/StartupReceiver.java
+index 97248fb7..e271d146 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/StartupReceiver.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/StartupReceiver.java
+@@ -38,7 +38,7 @@ public class StartupReceiver extends BroadcastReceiver {
+         try {
+             boolean startImmediately = PreferenceHelper.getInstance().shouldStartLoggingOnBootup();
+
+-            LOG.info("Start on bootup - " + String.valueOf(startImmediately));
++            LOG.info("Start on bootup - {}", startImmediately);
+
+             if (startImmediately) {
+
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/common/AppSettings.java b/gpslogger/src/main/java/com/mendhak/gpslogger/common/AppSettings.java
+index 1575a3d9..63d55dd7 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/common/AppSettings.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/common/AppSettings.java
+@@ -36,7 +36,7 @@ public class AppSettings extends Application {
+
+
+     private static AppSettings instance;
+-    private static Logger LOG;
++    private static Logger log;
+
+
+     @Override
+@@ -47,12 +47,12 @@ public class AppSettings extends Application {
+
+         //Configure the slf4j logger
+         Logs.configure();
+-        LOG = Logs.of(this.getClass());
+-        LOG.debug("SLF4J logging configured");
++        log = Logs.of(this.getClass());
++        log.debug("SLF4J logging configured");
+
+         //Configure the Event Bus
+         EventBus.builder().logNoSubscriberMessages(false).sendNoSubscriberEvent(false).installDefaultEventBus();
+-        LOG.debug("EventBus configured");
++        log.debug("EventBus configured");
+
+         createNotificationChannels();
+     }
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/common/BatteryInfo.java b/gpslogger/src/main/java/com/mendhak/gpslogger/common/BatteryInfo.java
+index 60bee336..34bbfcad 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/common/BatteryInfo.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/common/BatteryInfo.java
+@@ -1,10 +1,10 @@
+ package com.mendhak.gpslogger.common;
+
+ public class BatteryInfo {
+-    public int BatteryLevel;
+-    public boolean IsCharging;
++    public int batteryLevel;
++    public boolean isCharging;
+     public BatteryInfo(int percentage, boolean isCharging){
+-        BatteryLevel = percentage;
+-        IsCharging = isCharging;
++        batteryLevel = percentage;
++        this.isCharging = isCharging;
+     }
+ }
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/common/PreferenceHelper.java b/gpslogger/src/main/java/com/mendhak/gpslogger/common/PreferenceHelper.java
+index 02d385e2..ba069cb1 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/common/PreferenceHelper.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/common/PreferenceHelper.java
+@@ -42,9 +42,6 @@ public class PreferenceHelper {
+     /**
+      * Use PreferenceHelper.getInstance()
+      */
+-    private PreferenceHelper(){
+-
+-    }
+
+     public static PreferenceHelper getInstance(){
+         if(instance==null){
+@@ -93,8 +90,8 @@ public class PreferenceHelper {
+         return prefs.getString(PreferenceNames.GOOGLE_DRIVE_AUTH_STATE, null);
+     }
+
+-    public void setGoogleDriveAuthState(String auth_state_json_serialized){
+-        prefs.edit().putString(PreferenceNames.GOOGLE_DRIVE_AUTH_STATE, auth_state_json_serialized).apply();
++    public void setGoogleDriveAuthState(String authStateJsonSerialized){
++        prefs.edit().putString(PreferenceNames.GOOGLE_DRIVE_AUTH_STATE, authStateJsonSerialized).apply();
+     }
+
+     @ProfilePreference(name=PreferenceNames.GOOGLE_DRIVE_FOLDER_PATH)
+@@ -941,8 +938,8 @@ public class PreferenceHelper {
+         return prefs.getString(PreferenceNames.OPENSTREETMAP_AUTH_STATE, "");
+     }
+
+-    public void setOSMAuthState(String auth_state_json_serialized){
+-        prefs.edit().putString(PreferenceNames.OPENSTREETMAP_AUTH_STATE, auth_state_json_serialized).apply();
++    public void setOSMAuthState(String authStateJsonSerialized){
++        prefs.edit().putString(PreferenceNames.OPENSTREETMAP_AUTH_STATE, authStateJsonSerialized).apply();
+     }
+
+
+@@ -1249,7 +1246,10 @@ public class PreferenceHelper {
+             }
+         }
+
+-        OutputStream outStream = new FileOutputStream(f);
++        OutputStream outStream = null;
++        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++            outStream = java.nio.file.Files.newOutputStream(f.toPath());
++        }
+         props.store(outStream,"Warning: This file can contain server names, passwords, email addresses and other sensitive information.");
+
+     }
+@@ -1261,7 +1261,10 @@ public class PreferenceHelper {
+
+     public void setPreferenceFromPropertiesFile(File file) throws IOException {
+         Properties props = new Properties();
+-        InputStreamReader reader = new InputStreamReader(new FileInputStream(file));
++        InputStreamReader reader = null;
++        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++            reader = new InputStreamReader(java.nio.file.Files.newInputStream(file.toPath()));
++        }
+         props.load(reader);
+
+         for (Object key : props.keySet()) {
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/common/RejectionHandler.java b/gpslogger/src/main/java/com/mendhak/gpslogger/common/RejectionHandler.java
+index fced27d6..23f14cf6 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/common/RejectionHandler.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/common/RejectionHandler.java
+@@ -32,7 +32,7 @@ public class RejectionHandler implements RejectedExecutionHandler {
+
+     @Override
+     public void rejectedExecution(Runnable runnable, ThreadPoolExecutor threadPoolExecutor) {
+-        LOG.warn(SessionLogcatAppender.MARKER_INTERNAL, "Could not queue task, some points may not be logged.");
++        LOG.warn(SessionLogcatAppender.markerInternal, "Could not queue task, some points may not be logged.");
+     }
+ }
+
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/common/Session.java b/gpslogger/src/main/java/com/mendhak/gpslogger/common/Session.java
+index 7a897639..7c863a9d 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/common/Session.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/common/Session.java
+@@ -36,10 +36,6 @@ public class Session {
+
+     private Location temporaryLocationForBestAccuracy;
+
+-    private Session() {
+-
+-    }
+-
+     public static Session getInstance() {
+         if (instance == null) {
+             instance = new Session();
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/common/Strings.java b/gpslogger/src/main/java/com/mendhak/gpslogger/common/Strings.java
+index 83d05851..544c4816 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/common/Strings.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/common/Strings.java
+@@ -27,7 +27,6 @@ import com.google.gson.Gson;
+ import com.mendhak.gpslogger.BuildConfig;
+ import com.mendhak.gpslogger.R;
+
+-import java.io.UnsupportedEncodingException;
+ import java.net.URLEncoder;
+ import java.text.DecimalFormat;
+ import java.text.NumberFormat;
+@@ -166,11 +165,11 @@ public class Strings {
+      * Makes string safe for writing to XML file. Removes lt and gt. Best used
+      * when writing to file.
+      *
+-     * @param desc
++     * @param description
+      * @return
+      */
+-    public static String cleanDescriptionForXml(String desc) {
+-        desc = desc.replace("<", "");
++    public static String cleanDescriptionForXml(String description) {
++        String desc = description.replace("<", "");
+         desc = desc.replace(">", "");
+         desc = desc.replace("&", "&amp;");
+         desc = desc.replace("\"", "&quot;");
+@@ -178,8 +177,8 @@ public class Strings {
+         return desc;
+     }
+
+-    public static String cleanDescriptionForJson(String desc){
+-        desc = desc.replace("\"", "");
++    public static String cleanDescriptionForJson(String description){
++        String desc = description.replace("\"", "");
+         desc = desc.replace("\\","");
+         return desc;
+     }
+@@ -187,9 +186,9 @@ public class Strings {
+     public static String getIsoDateTimeWithOffset(Date dateToFormat){
+         Calendar calendar = Calendar.getInstance();
+         calendar.setTimeInMillis(System.currentTimeMillis());
+-        SimpleDateFormat ISO_8601_DATE_TIME = new SimpleDateFormat(getIsoDateTimeWithOffsetFormat(), Locale.US);
+-        ISO_8601_DATE_TIME.setTimeZone(calendar.getTimeZone());
+-        String dateTimeStringWithOffset = ISO_8601_DATE_TIME.format(dateToFormat);
++        SimpleDateFormat iso8601dateTime = new SimpleDateFormat(getIsoDateTimeWithOffsetFormat(), Locale.US);
++        iso8601dateTime.setTimeZone(calendar.getTimeZone());
++        String dateTimeStringWithOffset = iso8601dateTime.format(dateToFormat);
+         //Fix for older Android where ZZZZZ does not include colon
+         if (!dateTimeStringWithOffset.substring(dateTimeStringWithOffset.length() - 3).startsWith(":")) {
+             dateTimeStringWithOffset = dateTimeStringWithOffset.substring(0, dateTimeStringWithOffset.length() - 2) + ":" + dateTimeStringWithOffset.substring(dateTimeStringWithOffset.length() - 2);
+@@ -446,10 +445,10 @@ public class Strings {
+         }
+
+         //Remove negative sign
+-        decimaldegrees = Math.abs(decimaldegrees);
++        double decimalDegreesAbs = Math.abs(decimaldegrees);
+
+-        int deg =  (int) Math.floor(decimaldegrees);
+-        double minfloat = (decimaldegrees-deg)*60;
++        int deg =  (int) Math.floor(decimalDegreesAbs);
++        double minfloat = (decimalDegreesAbs-deg)*60;
+         int min = (int) Math.floor(minfloat);
+         double secfloat = (minfloat-min)*60;
+         double sec = Math.round(secfloat * 10000.0)/10000.0;
+@@ -477,10 +476,10 @@ public class Strings {
+         }
+
+         //Remove negative sign
+-        decimaldegrees = Math.abs(decimaldegrees);
++        double decimalDegreesAbs = Math.abs(decimaldegrees);
+
+-        int deg =  (int) Math.floor(decimaldegrees);
+-        double minfloat = (decimaldegrees-deg)*60;
++        int deg =  (int) Math.floor(decimalDegreesAbs);
++        double minfloat = (decimalDegreesAbs-deg)*60;
+         double min = Math.round(minfloat*10000.0)/10000.0;
+
+         return ("" + deg + "° " + min + "' " + cardinality);
+@@ -532,7 +531,7 @@ public class Strings {
+      * F-Droid requires API keys be kept in source control
+      * Here is a little obscurity.
+      */
+-    public static String GetDropBox() {
++    public static String getDropBox() {
+         return (new Object() {
+             int t;
+
+@@ -578,7 +577,7 @@ public class Strings {
+      * F-Droid requires API keys be kept in source control
+      * Here is a little obscurity.
+      */
+-    public static String GetOSM(){
++    public static String getOSM(){
+         return (new Object() {
+             int t;
+
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/common/network/CertificateValidationWorkflow.java b/gpslogger/src/main/java/com/mendhak/gpslogger/common/network/CertificateValidationWorkflow.java
+index a1e8a879..2c2e5844 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/common/network/CertificateValidationWorkflow.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/common/network/CertificateValidationWorkflow.java
+@@ -101,7 +101,7 @@ public class CertificateValidationWorkflow implements Runnable {
+                     writer.write("EHLO localhost\r\n");
+                     writer.flush();
+                     line = reader.readLine();
+-                    LOG.debug("SERVER: " + line);
++                    LOG.debug("SERVER: {}", line);
+                 }
+
+                 String command = "", regexToMatch = "";
+@@ -119,12 +119,12 @@ public class CertificateValidationWorkflow implements Runnable {
+
+                 }
+
+-                LOG.debug("CLIENT: " + command);
++                LOG.debug("CLIENT: {}", command);
+                 LOG.debug("(Expecting regex {} in response)", regexToMatch);
+                 writer.write(command);
+                 writer.flush();
+                 while ((line = reader.readLine()) != null) {
+-                    LOG.debug("SERVER: " + line);
++                    LOG.debug("SERVER: {}", line);
+                     if (line.matches(regexToMatch)) {
+                         LOG.debug("Elevating socket and attempting handshake");
+                         connectToSSLSocket(plainSocket);
+@@ -188,7 +188,7 @@ public class CertificateValidationWorkflow implements Runnable {
+             final CertificateValidationException cve = Networks.extractCertificateValidationException(e);
+
+             if (cve != null) {
+-                LOG.debug("Untrusted certificate found, " + cve.getCertificate().toString());
++                LOG.debug("Untrusted certificate found, {}", cve.getCertificate().toString());
+                 try {
+
+                     StringBuilder sans = new StringBuilder();
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/common/network/Networks.java b/gpslogger/src/main/java/com/mendhak/gpslogger/common/network/Networks.java
+index 606877d5..39773809 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/common/network/Networks.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/common/network/Networks.java
+@@ -34,10 +34,9 @@ import com.mendhak.gpslogger.ui.Dialogs;
+ import org.slf4j.Logger;
+
+ import java.io.File;
+-import java.io.FileInputStream;
+-import java.io.FileOutputStream;
+ import java.io.IOException;
+ import java.io.InputStream;
++import java.io.OutputStream;
+ import java.security.KeyStore;
+ import java.security.KeyStoreException;
+ import java.security.NoSuchAlgorithmException;
+@@ -53,26 +52,29 @@ public class Networks {
+
+     private static final Logger LOG = Logs.of(Networks.class);
+
+-    static String LOCAL_TRUSTSTORE_FILENAME = "knownservers.bks";
+-    static String LOCAL_TRUSTSTORE_PASSWORD = "politelemon";
++    static String localTruststoreFilename = "knownservers.bks";
++    static String localTruststorePassword = "politelemon";
+
+     public static KeyStore getKnownServersStore(Context context)
+             throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
+
+         KeyStore mKnownServersStore = KeyStore.getInstance(KeyStore.getDefaultType());
+-        File localTrustStoreFile = new File(Files.storageFolder(context), LOCAL_TRUSTSTORE_FILENAME);
++        File localTrustStoreFile = new File(Files.storageFolder(context), localTruststoreFilename);
+
+-        LOG.debug("Getting local truststore - " + localTrustStoreFile.getAbsolutePath());
++        LOG.debug("Getting local truststore - {}", localTrustStoreFile.getAbsolutePath());
+         if (localTrustStoreFile.exists()) {
+-            InputStream in = new FileInputStream(localTrustStoreFile);
++            InputStream in = null;
++            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++                in = java.nio.file.Files.newInputStream(localTrustStoreFile.toPath());
++            }
+             try {
+-                mKnownServersStore.load(in, LOCAL_TRUSTSTORE_PASSWORD.toCharArray());
++                mKnownServersStore.load(in, localTruststorePassword.toCharArray());
+             } finally {
+                 in.close();
+             }
+         } else {
+             // next is necessary to initialize an empty KeyStore instance
+-            mKnownServersStore.load(null, LOCAL_TRUSTSTORE_PASSWORD.toCharArray());
++            mKnownServersStore.load(null, localTruststorePassword.toCharArray());
+         }
+
+         return mKnownServersStore;
+@@ -82,25 +84,19 @@ public class Networks {
+     public static void addCertToKnownServersStore(Certificate cert, Context context)
+             throws  KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+
+-        File localTrustStoreFile = new File(Files.storageFolder(context), LOCAL_TRUSTSTORE_FILENAME);
++        File localTrustStoreFile = new File(Files.storageFolder(context), localTruststoreFilename);
+
+         KeyStore knownServers = Networks.getKnownServersStore(context);
+-        LOG.debug("Adding certificate - HashCode: " + cert.hashCode());
++        LOG.debug("Adding certificate - HashCode: {}", cert.hashCode());
+         knownServers.setCertificateEntry(Integer.toString(cert.hashCode()), cert);
+
+-        FileOutputStream fos = null;
+-
+-        try {
+-            //fos = context.openFileOutput(localTrustStoreFile.getName(), Context.MODE_PRIVATE);
+-            fos = new FileOutputStream(localTrustStoreFile);
+-            knownServers.store(fos, LOCAL_TRUSTSTORE_PASSWORD.toCharArray());
+-        }
+-        catch(Exception e)
+-        {
+-            LOG.error("Could not save certificate", e);
+-        }
+-        finally {
+-            fos.close();
++        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++            try (OutputStream fos = java.nio.file.Files.newOutputStream(localTrustStoreFile.toPath())) {
++                //fos = context.openFileOutput(localTrustStoreFile.getName(), Context.MODE_PRIVATE);
++                knownServers.store(fos, localTruststorePassword.toCharArray());
++            } catch (Exception e) {
++                LOG.error("Could not save certificate", e);
++            }
+         }
+     }
+
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/common/slf4j/Logs.java b/gpslogger/src/main/java/com/mendhak/gpslogger/common/slf4j/Logs.java
+index 94b7da91..f60a5bbc 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/common/slf4j/Logs.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/common/slf4j/Logs.java
+@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
+
+
+ public class Logs {
+-
++    static Logger log = getLogger(Logs.class.getName());
+     /**
+      * Returns a logger for the given class.
+      */
+@@ -50,8 +50,8 @@ public class Logs {
+             LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+             lc.reset();
+
+-            //final String LOG_DIR = "/sdcard/GPSLogger";
+-            final String LOG_DIR = PreferenceHelper.getInstance().getGpsLoggerFolder();
++            //final String logDir = "/sdcard/GPSLogger";
++            final String logDir = PreferenceHelper.getInstance().getGpsLoggerFolder();
+
+             GpsRollingFileAppender<ILoggingEvent> rollingFileAppender = new GpsRollingFileAppender<>();
+             rollingFileAppender.setAppend(true);
+@@ -59,11 +59,11 @@ public class Logs {
+
+             // OPTIONAL: Set an active log file (separate from the rollover files).
+             // If rollingPolicy.fileNamePattern already set, you don't need this.
+-            rollingFileAppender.setFile(LOG_DIR + "/debuglog.txt");
++            rollingFileAppender.setFile(logDir + "/debuglog.txt");
+             rollingFileAppender.setLazy(true);
+
+             TimeBasedRollingPolicy<ILoggingEvent> rollingPolicy = new TimeBasedRollingPolicy<>();
+-            rollingPolicy.setFileNamePattern(LOG_DIR + "/debuglog.%d.txt");
++            rollingPolicy.setFileNamePattern(logDir + "/debuglog.%d.txt");
+             rollingPolicy.setMaxHistory(3);
+             rollingPolicy.setParent(rollingFileAppender);  // parent and context required!
+             rollingPolicy.setContext(lc);
+@@ -103,8 +103,7 @@ public class Logs {
+
+         }
+         catch(Exception ex){
+-              System.out.println("Could not configure logging!");
++              log.error("Could not configure logging!", ex);
+         }
+-
+     }
+ }
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/common/slf4j/SessionLogcatAppender.java b/gpslogger/src/main/java/com/mendhak/gpslogger/common/slf4j/SessionLogcatAppender.java
+index 10152dd0..5cb40121 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/common/slf4j/SessionLogcatAppender.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/common/slf4j/SessionLogcatAppender.java
+@@ -32,12 +32,12 @@ public class SessionLogcatAppender extends AppenderBase<ILoggingEvent> {
+     /**
+      * Marker to indicate that this logger entry is special
+      */
+-    public static Marker MARKER_LOCATION = MarkerFactory.getMarker("LOCATION");
++    public static Marker markerLocation = MarkerFactory.getMarker("LOCATION");
+     /**
+      * Marker to indicate that this logger entry is for debug log files only
+      */
+-    public static Marker MARKER_INTERNAL = MarkerFactory.getMarker("INTERNAL");
+-    public static FifoDeque<ILoggingEvent> Statuses = new FifoDeque<>(325);
++    public static Marker markerInternal = MarkerFactory.getMarker("INTERNAL");
++    public static FifoDeque<ILoggingEvent> statuses = new FifoDeque<>(325);
+
+     public void close() {
+     }
+@@ -52,8 +52,8 @@ public class SessionLogcatAppender extends AppenderBase<ILoggingEvent> {
+         if(eventObject.getLevel().toInt() < Level.INFO.toInt()){ return; }
+
+         //Prevents certain entries from appearing in device logcat
+-        if(eventObject.getMarker() == MARKER_INTERNAL){ return; }
++        if(eventObject.getMarker() == markerInternal){ return; }
+
+-        Statuses.add(eventObject);
++        statuses.add(eventObject);
+     }
+ }
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/Files.java b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/Files.java
+index 5581027f..547d63d0 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/Files.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/Files.java
+@@ -48,6 +48,7 @@ import com.mendhak.gpslogger.common.slf4j.Logs;
+ import org.slf4j.Logger;
+
+ import java.io.*;
++import java.nio.file.StandardOpenOption;
+ import java.util.ArrayList;
+ import java.util.LinkedHashSet;
+ import java.util.List;
+@@ -187,14 +188,23 @@ public class Files {
+         if (!testFile.exists()) {
+             testFile.createNewFile();
+
+-            FileOutputStream initialWriter = new FileOutputStream(testFile, true);
+-            BufferedOutputStream initialOutput = new BufferedOutputStream(initialWriter);
+
+-            initialOutput.write("<x>This is a test file</x>".getBytes());
+-            initialOutput.flush();
+-            initialOutput.close();
++            OutputStream initialWriter = null;
++            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
++                initialWriter = java.nio.file.Files.newOutputStream(testFile.toPath(), StandardOpenOption.APPEND);
++            }
++            try {
++                BufferedOutputStream initialOutput = new BufferedOutputStream(initialWriter);
++
++                initialOutput.write("<x>This is a test file</x>".getBytes());
++                initialOutput.flush();
++                initialOutput.close();
+
+-            Files.addToMediaDatabase(testFile, "text/xml");
++                Files.addToMediaDatabase(testFile, "text/xml");
++            }
++            catch(NullPointerException n) {
++                LOG.error("Version not supported", n);
++            }
+         }
+
+         return testFile;
+@@ -208,20 +218,30 @@ public class Files {
+
+     public static void copyFile(File sourceLocation, File targetLocation)
+             throws FileNotFoundException, IOException {
+-        InputStream in = new FileInputStream(sourceLocation);
+-        OutputStream out = new FileOutputStream(targetLocation);
+-
+-        // Copy the bits from instream to outstream
+-        byte[] buf = new byte[1024];
+-        int len;
+-        while ((len = in.read(buf)) > 0) {
+-            out.write(buf, 0, len);
++        InputStream in = null;
++        OutputStream out = null;
++        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
++            in = java.nio.file.Files.newInputStream(sourceLocation.toPath());
++            out = java.nio.file.Files.newOutputStream(targetLocation.toPath());
++        }
++
++
++        try {
++            // Copy the bits from instream to outstream
++            byte[] buf = new byte[1024];
++            int len;
++            while ((len = in.read(buf)) > 0) {
++                out.write(buf, 0, len);
++            }
++            in.close();
++            out.close();
++        }
++        catch(NullPointerException n) {
++            LOG.error("Version not supported", n);
+         }
+-        in.close();
+-        out.close();
+     }
+
+-    public static void DownloadFromUrl(String url, File destination) throws IOException {
++    public static void downloadFromUrl(String url, File destination) throws IOException {
+         OkHttpClient client = new OkHttpClient();
+         Request request = new Request.Builder().url(url).build();
+
+@@ -232,11 +252,18 @@ public class Files {
+             InputStream inputStream = response.body().byteStream();
+
+
+-            OutputStream outputStream = new FileOutputStream(destination);
+-            Streams.copyIntoStream(inputStream, outputStream);
+-            response.body().close();
+-            LOG.debug("Wrote to properties file");
+-
++            OutputStream outputStream = null;
++            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++                outputStream = java.nio.file.Files.newOutputStream(destination.toPath());
++            }
++            try {
++                Streams.copyIntoStream(inputStream, outputStream);
++                response.body().close();
++                LOG.debug("Wrote to properties file");
++            }
++            catch (NullPointerException n) {
++                LOG.error("Version not supported", n);
++            }
+         }
+
+
+@@ -273,20 +300,30 @@ public class Files {
+     }
+
+     public static void saveListToCacheFile(List<String> items, String cacheKey, Context ctx){
++        List<String> itemList = items;
++
+         try
+         {
+
+             if(items.size() > 10) {
+-                items = new ArrayList<>(items.subList(1, 11));
++                itemList = new ArrayList<>(items.subList(1, 11));
+             }
+
+             File cacheFile = new File(ctx.getCacheDir(), cacheKey);
+             cacheFile.createNewFile();
+-            FileOutputStream fos = new FileOutputStream(cacheFile);
+-            ObjectOutputStream oos = new ObjectOutputStream(fos);
+-            oos.writeObject(items);
+-            oos.close();
+-            fos.close();
++            OutputStream fos = null;
++            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++                fos = java.nio.file.Files.newOutputStream(cacheFile.toPath());
++            }
++            try {
++                ObjectOutputStream oos = new ObjectOutputStream(fos);
++                oos.writeObject(itemList);
++                oos.close();
++                fos.close();
++            }
++            catch (NullPointerException n) {
++                LOG.error("Version not supported", n);
++            }
+         }
+         catch (Exception ioe)
+         {
+@@ -304,13 +341,21 @@ public class Files {
+             cacheFile.createNewFile();
+
+             if(cacheFile.length() > 0){
+-                FileInputStream fis = new FileInputStream(cacheFile);
+-                ObjectInputStream ois = new ObjectInputStream(fis);
++                InputStream fis = null;
++                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++                    fis = java.nio.file.Files.newInputStream(cacheFile.toPath());
++                }
++                try {
++                    ObjectInputStream ois = new ObjectInputStream(fis);
+
+-                items = (ArrayList<String>) ois.readObject();
++                    items = (ArrayList<String>) ois.readObject();
+
+-                ois.close();
+-                fis.close();
++                    ois.close();
++                    fis.close();
++                }
++                catch(NullPointerException n) {
++                    LOG.error("Version not supported", n);
++                }
+             }
+
+
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/Streams.java b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/Streams.java
+index 88db3403..9fb32325 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/Streams.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/Streams.java
+@@ -60,11 +60,11 @@ public class Streams {
+             try {
+                 is.close();
+             } catch (Exception e) {
+-                LOG.warn(SessionLogcatAppender.MARKER_INTERNAL, "getStringFromInputStream - could not close stream");
++                LOG.warn(SessionLogcatAppender.markerInternal, "getStringFromInputStream - could not close stream");
+             }
+         }
+
+-        return null;
++        return new byte[0];
+
+     }
+
+@@ -92,7 +92,7 @@ public class Streams {
+             try {
+                 is.close();
+             } catch (Exception e) {
+-                LOG.warn(SessionLogcatAppender.MARKER_INTERNAL, "getStringFromInputStream - could not close stream");
++                LOG.warn(SessionLogcatAppender.markerInternal, "getStringFromInputStream - could not close stream");
+             }
+         }
+
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/csv/CSVFileLogger.java b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/csv/CSVFileLogger.java
+index 5d83ca92..70eebf15 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/csv/CSVFileLogger.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/csv/CSVFileLogger.java
+@@ -21,7 +21,6 @@ package com.mendhak.gpslogger.loggers.csv;
+
+ import android.content.Context;
+ import android.location.Location;
+-import androidx.annotation.Nullable;
+
+ import com.mendhak.gpslogger.common.BatteryInfo;
+ import com.mendhak.gpslogger.common.BundleConstants;
+@@ -34,8 +33,11 @@ import com.mendhak.gpslogger.loggers.FileLogger;
+ import com.mendhak.gpslogger.loggers.Files;
+ import org.apache.commons.csv.CSVFormat;
+ import org.apache.commons.csv.CSVPrinter;
++
++import java.io.BufferedWriter;
+ import java.io.File;
+ import java.io.FileWriter;
++import java.nio.file.StandardOpenOption;
+ import java.util.Date;
+
+
+@@ -77,8 +79,8 @@ public class CSVFileLogger implements FileLogger {
+     public CSVFileLogger(File file, Context context) {
+         this.file = file;
+         BatteryInfo batteryInfo = Systems.getBatteryInfo(context);
+-        this.batteryLevel = batteryInfo.BatteryLevel;
+-        this.batteryCharging = batteryInfo.IsCharging;
++        this.batteryLevel = batteryInfo.batteryLevel;
++        this.batteryCharging = batteryInfo.isCharging;
+     }
+
+     @Override
+@@ -125,7 +127,13 @@ public class CSVFileLogger implements FileLogger {
+                     .setHeader(getCSVFileHeaders())
+                     .setDelimiter(PreferenceHelper.getInstance().getCSVDelimiter())
+                     .build();
+-            FileWriter out = new FileWriter(file);
++
++            BufferedWriter out = null;
++            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++                out = java.nio.file.Files.newBufferedWriter(file.toPath());
++            }
++
++            assert out != null;
+             CSVPrinter printer = new CSVPrinter(out, header);
+             printer.close();
+             out.close();
+@@ -135,7 +143,10 @@ public class CSVFileLogger implements FileLogger {
+                 .setDelimiter(PreferenceHelper.getInstance().getCSVDelimiter())
+                 .build();
+
+-        FileWriter out = new FileWriter(file, true);
++        BufferedWriter out = null;
++        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++            out = java.nio.file.Files.newBufferedWriter(file.toPath(), StandardOpenOption.APPEND);
++        }
+         try (CSVPrinter printer = new CSVPrinter(out, header)) {
+             printer.printRecord(
+                     Strings.getIsoDateTime(new Date(loc.getTime())),
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/customurl/CustomUrlLogger.java b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/customurl/CustomUrlLogger.java
+index c849e538..a0eb9b90 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/customurl/CustomUrlLogger.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/customurl/CustomUrlLogger.java
+@@ -49,8 +49,8 @@ public class CustomUrlLogger implements FileLogger {
+                            String httpHeaders, String basicAuthUsername, String basicAuthPassword) {
+         this.customLoggingUrl = customLoggingUrl;
+         BatteryInfo batteryInfo = Systems.getBatteryInfo(context);
+-        this.batteryLevel = batteryInfo.BatteryLevel;
+-        this.batteryCharging = batteryInfo.IsCharging;
++        this.batteryLevel = batteryInfo.batteryLevel;
++        this.batteryCharging = batteryInfo.isCharging;
+         this.httpMethod = httpMethod;
+         this.httpBody = httpBody;
+         this.httpHeaders = httpHeaders;
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/customurl/CustomUrlWorker.java b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/customurl/CustomUrlWorker.java
+index 0fa1a8c5..f1b9b7a9 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/customurl/CustomUrlWorker.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/customurl/CustomUrlWorker.java
+@@ -1,5 +1,6 @@
+ package com.mendhak.gpslogger.loggers.customurl;
+
++import android.annotation.SuppressLint;
+ import android.content.Context;
+
+ import androidx.annotation.NonNull;
+@@ -38,6 +39,7 @@ public class CustomUrlWorker extends Worker {
+         super(context, workerParams);
+     }
+
++    @SuppressLint("DefaultLocale")
+     @NonNull
+     @Override
+     public Result doWork() {
+@@ -56,7 +58,7 @@ public class CustomUrlWorker extends Worker {
+
+         for (CustomUrlRequest urlRequest : urlRequests) {
+             try{
+-                LOG.info("HTTP Request - " + urlRequest.getLogURL());
++                LOG.info("HTTP Request - {}", urlRequest.getLogURL());
+
+                 OkHttpClient.Builder okBuilder = new OkHttpClient.Builder();
+                 okBuilder.sslSocketFactory(Networks.getSocketFactory(AppSettings.getInstance()),
+@@ -76,9 +78,9 @@ public class CustomUrlWorker extends Worker {
+                 Response response = okBuilder.build().newCall(request).execute();
+
+                 if (response.isSuccessful()) {
+-                    LOG.debug("HTTP request complete with successful response code " + response);
++                    LOG.debug("HTTP request complete with successful response code {}", response);
+                 } else {
+-                    LOG.error("HTTP request complete with unexpected response code " + response);
++                    LOG.error("HTTP request complete with unexpected response code {}", response);
+                     responseError = "Unexpected code " + response;
+                     responseThrowableMessage = response.body().string();
+                     success = false;
+@@ -133,7 +135,7 @@ public class CustomUrlWorker extends Worker {
+         String csvFilePath = inputData.getString("csvFilePath");
+
+         if(!Strings.isNullOrEmpty(gpxFilePath)){
+-            OpenGTSManager openGTSManager = new OpenGTSManager(PreferenceHelper.getInstance(), Systems.getBatteryInfo(AppSettings.getInstance()).BatteryLevel);
++            OpenGTSManager openGTSManager = new OpenGTSManager(PreferenceHelper.getInstance(), Systems.getBatteryInfo(AppSettings.getInstance()).batteryLevel);
+             List<CustomUrlRequest> gpxCustomUrlRequests = openGTSManager.getCustomUrlRequestsFromGPX(new File(gpxFilePath));
+             urlRequests = gpxCustomUrlRequests.toArray(new CustomUrlRequest[0]);
+         }
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/geojson/GeoJSONLogger.java b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/geojson/GeoJSONLogger.java
+index 977ceaee..e6ab6f72 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/geojson/GeoJSONLogger.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/geojson/GeoJSONLogger.java
+@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
+  */
+
+ public class GeoJSONLogger implements FileLogger {
+-    final static Object lock = new Object();
++    final static Object LOCK = new Object();
+     private final static ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(1, 1, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10), new RejectionHandler());
+     private final File file;
+     protected final String name;
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/geojson/GeoJSONWriterPoints.java b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/geojson/GeoJSONWriterPoints.java
+index 1dfac8ac..d9427bf7 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/geojson/GeoJSONWriterPoints.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/geojson/GeoJSONWriterPoints.java
+@@ -54,7 +54,7 @@ public class GeoJSONWriterPoints implements Runnable {
+     public void run() {
+         try {
+
+-            synchronized (GeoJSONLogger.lock) {
++            synchronized (GeoJSONLogger.LOCK) {
+                 byte[] value = getString(Files.reallyExists(file)).getBytes();
+
+                 RandomAccessFile raf;
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/gpx/Gpx10FileLogger.java b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/gpx/Gpx10FileLogger.java
+index 36af142d..957a7e99 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/gpx/Gpx10FileLogger.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/gpx/Gpx10FileLogger.java
+@@ -33,6 +33,7 @@ import com.mendhak.gpslogger.loggers.Files;
+ import org.slf4j.Logger;
+
+ import java.io.*;
++import java.nio.file.StandardOpenOption;
+ import java.util.Date;
+ import java.util.concurrent.LinkedBlockingQueue;
+ import java.util.concurrent.ThreadPoolExecutor;
+@@ -42,7 +43,7 @@ import de.greenrobot.event.EventBus;
+
+
+ public class Gpx10FileLogger implements FileLogger {
+-    protected final static Object lock = new Object();
++    protected final static Object LOCK = new Object();
+
+     private final static ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(1, 1, 60, TimeUnit.SECONDS,
+             new LinkedBlockingQueue<Runnable>(10), new RejectionHandler());
+@@ -76,7 +77,7 @@ public class Gpx10FileLogger implements FileLogger {
+
+     public void annotate(String description, Location loc) throws Exception {
+
+-        description = Strings.cleanDescriptionForXml(description);
++        String cleanedDescription = Strings.cleanDescriptionForXml(description);
+
+         long time = loc.getTime();
+         if (time <= 0) {
+@@ -87,7 +88,7 @@ public class Gpx10FileLogger implements FileLogger {
+             dateTimeString = Strings.getIsoDateTimeWithOffset(new Date(time));
+         }
+
+-        Runnable annotateHandler = getAnnotateHandler(description, gpxFile, loc, dateTimeString);
++        Runnable annotateHandler = getAnnotateHandler(cleanedDescription, gpxFile, loc, dateTimeString);
+         EXECUTOR.execute(annotateHandler);
+     }
+
+@@ -124,7 +125,7 @@ class Gpx10AnnotateHandler implements Runnable {
+     @Override
+     public void run() {
+
+-        synchronized (Gpx10FileLogger.lock) {
++        synchronized (Gpx10FileLogger.LOCK) {
+             if(!Files.reallyExists(gpxFile)){
+                 return;
+             }
+@@ -136,32 +137,42 @@ class Gpx10AnnotateHandler implements Runnable {
+                 //write to a temp file, delete original file, move temp to original
+                 File gpxTempFile = new File(gpxFile.getAbsolutePath() + ".tmp");
+
+-                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(gpxFile));
+-                BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(gpxTempFile));
++                BufferedInputStream bis = null;
++                BufferedOutputStream bos = null;
++                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++                    bis = new BufferedInputStream(java.nio.file.Files.newInputStream(gpxFile.toPath()));
++                    bos = new BufferedOutputStream(java.nio.file.Files.newOutputStream(gpxTempFile.toPath()));
++                }
++
++                try {
+
+-                int written = 0;
+-                int readSize;
+-                byte[] buffer = new byte[annotateOffset];
+-                while ((readSize = bis.read(buffer)) > 0) {
+-                    bos.write(buffer, 0, readSize);
+-                    written += readSize;
++                    int written = 0;
++                    int readSize;
++                    byte[] buffer = new byte[annotateOffset];
++                    while ((readSize = bis.read(buffer)) > 0) {
++                        bos.write(buffer, 0, readSize);
++                        written += readSize;
+
+-                    System.out.println(written);
++                        LOG.debug("Updating buffer: {}", written);
+
+-                    if (written == annotateOffset) {
+-                        bos.write(wpt.getBytes());
+-                        buffer = new byte[20480];
++                        if (written == annotateOffset) {
++                            bos.write(wpt.getBytes());
++                            buffer = new byte[20480];
++                        }
+                     }
+
+-                }
+
+-                bis.close();
+-                bos.close();
++                    bis.close();
++                    bos.close();
+
+-                gpxFile.delete();
+-                gpxTempFile.renameTo(gpxFile);
++                    gpxFile.delete();
++                    gpxTempFile.renameTo(gpxFile);
+
+-                LOG.debug("Finished annotation to GPX10 File");
++                    LOG.debug("Finished annotation to GPX10 File");
++                }
++                catch(NullPointerException n) {
++                    LOG.error("Version not supported", n);
++                }
+             } catch (Exception e) {
+                 EventBus.getDefault().post(new CommandEvents.FileWriteFailure());
+                 LOG.error("Error annotating GPX file", e);
+@@ -211,26 +222,34 @@ class Gpx10WriteHandler implements Runnable {
+
+     @Override
+     public void run() {
+-        synchronized (Gpx10FileLogger.lock) {
++        synchronized (Gpx10FileLogger.LOCK) {
+
+             try {
+                 if (!Files.reallyExists(gpxFile)) {
+                     gpxFile.createNewFile();
+
+-                    FileOutputStream initialWriter = new FileOutputStream(gpxFile, true);
+-                    BufferedOutputStream initialOutput = new BufferedOutputStream(initialWriter);
+-
+-                    initialOutput.write(getBeginningXml(dateTimeString).getBytes());
+-                    initialOutput.write("<trk>".getBytes());
+-                    initialOutput.write("<name>".getBytes());
+-                    initialOutput.write(gpxFile.getName().replace(".gpx","").getBytes());
+-                    initialOutput.write("</name>".getBytes());
+-                    initialOutput.write(getEndXml().getBytes());
+-                    initialOutput.flush();
+-                    initialOutput.close();
+-
+-                    //New file, so new segment.
+-                    addNewTrackSegment = true;
++                    OutputStream initialWriter = null;
++                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++                        initialWriter = java.nio.file.Files.newOutputStream(gpxFile.toPath(), StandardOpenOption.APPEND);
++                    }
++                    try {
++                        BufferedOutputStream initialOutput = new BufferedOutputStream(initialWriter);
++
++                        initialOutput.write(getBeginningXml(dateTimeString).getBytes());
++                        initialOutput.write("<trk>".getBytes());
++                        initialOutput.write("<name>".getBytes());
++                        initialOutput.write(gpxFile.getName().replace(".gpx", "").getBytes());
++                        initialOutput.write("</name>".getBytes());
++                        initialOutput.write(getEndXml().getBytes());
++                        initialOutput.flush();
++                        initialOutput.close();
++
++                        //New file, so new segment.
++                        addNewTrackSegment = true;
++                    }
++                    catch (NullPointerException n) {
++                        LOG.error("Version not supported", n);
++                    }
+                 }
+
+                 int offsetFromEnd = (addNewTrackSegment) ? getEndXml().length() : getEndXmlWithSegment().length();
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/kml/Kml22FileLogger.java b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/kml/Kml22FileLogger.java
+index b9952a83..ee3e02a1 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/kml/Kml22FileLogger.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/kml/Kml22FileLogger.java
+@@ -32,6 +32,7 @@ import org.slf4j.Logger;
+
+ import java.io.*;
+ import java.nio.channels.FileChannel;
++import java.nio.file.StandardOpenOption;
+ import java.util.Date;
+ import java.util.concurrent.LinkedBlockingQueue;
+ import java.util.concurrent.ThreadPoolExecutor;
+@@ -40,7 +41,7 @@ import java.util.concurrent.TimeUnit;
+ import de.greenrobot.event.EventBus;
+
+ public class Kml22FileLogger implements FileLogger {
+-    protected final static Object lock = new Object();
++    protected final static Object LOCK = new Object();
+     private final static ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(1, 1, 60, TimeUnit.SECONDS,
+             new LinkedBlockingQueue<Runnable>(10), new RejectionHandler());
+     private final boolean addNewTrackSegment;
+@@ -61,9 +62,9 @@ public class Kml22FileLogger implements FileLogger {
+
+     public void annotate(String description, Location loc) throws Exception {
+
+-        description = Strings.cleanDescriptionForXml(description);
++        String cleanedDescription = Strings.cleanDescriptionForXml(description);
+
+-        Kml22AnnotateHandler annotateHandler = new Kml22AnnotateHandler(kmlFile, description, loc);
++        Kml22AnnotateHandler annotateHandler = new Kml22AnnotateHandler(kmlFile, cleanedDescription, loc);
+         EXECUTOR.execute(annotateHandler);
+     }
+
+@@ -94,7 +95,7 @@ class Kml22AnnotateHandler implements Runnable {
+         }
+
+         try {
+-            synchronized (Kml22FileLogger.lock) {
++            synchronized (Kml22FileLogger.LOCK) {
+
+                 String descriptionNode = getPlacemarkXml(description, loc);
+
+@@ -170,30 +171,37 @@ class Kml22WriteHandler implements Runnable {
+             String placemarkHead = "<Placemark>\n<gx:Track>\n";
+             String placemarkTail = "</gx:Track>\n</Placemark></Document></kml>\n";
+
+-            synchronized (Kml22FileLogger.lock) {
++            synchronized (Kml22FileLogger.LOCK) {
+
+                 if(!Files.reallyExists(kmlFile)){
+                     kmlFile.createNewFile();
+-
+-                    FileOutputStream initialWriter = new FileOutputStream(kmlFile, true);
+-                    BufferedOutputStream initialOutput = new BufferedOutputStream(initialWriter);
+-
+-                    StringBuilder initialXml = new StringBuilder();
+-                    initialXml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+-                    initialXml.append("<kml xmlns=\"http://www.opengis.net/kml/2.2\" ");
+-                    initialXml.append("xmlns:gx=\"http://www.google.com/kml/ext/2.2\" ");
+-                    initialXml.append("xmlns:kml=\"http://www.opengis.net/kml/2.2\" ");
+-                    initialXml.append("xmlns:atom=\"http://www.w3.org/2005/Atom\">");
+-                    initialXml.append("<Document>");
+-                    initialXml.append("<name>").append(dateTimeString).append("</name>\n");
+-
+-                    initialXml.append("</Document></kml>\n");
+-                    initialOutput.write(initialXml.toString().getBytes());
+-                    initialOutput.flush();
+-                    initialOutput.close();
+-
+-                    //New file, so new track segment
+-                    addNewTrackSegment = true;
++                    OutputStream initial = null;
++                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++                        initial = java.nio.file.Files.newOutputStream(kmlFile.toPath(), StandardOpenOption.APPEND);
++                    }
++                    try {
++                        BufferedOutputStream initialOutput = new BufferedOutputStream(initial);
++
++                        StringBuilder initialXml = new StringBuilder();
++                        initialXml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
++                        initialXml.append("<kml xmlns=\"http://www.opengis.net/kml/2.2\" ");
++                        initialXml.append("xmlns:gx=\"http://www.google.com/kml/ext/2.2\" ");
++                        initialXml.append("xmlns:kml=\"http://www.opengis.net/kml/2.2\" ");
++                        initialXml.append("xmlns:atom=\"http://www.w3.org/2005/Atom\">");
++                        initialXml.append("<Document>");
++                        initialXml.append("<name>").append(dateTimeString).append("</name>\n");
++
++                        initialXml.append("</Document></kml>\n");
++                        initialOutput.write(initialXml.toString().getBytes());
++                        initialOutput.flush();
++                        initialOutput.close();
++
++                        //New file, so new track segment
++                        addNewTrackSegment = true;
++                    }
++                    catch (NullPointerException n) {
++                        LOG.error("Version not supported", n);
++                    }
+                 }
+
+
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/nmea/NmeaFileLogger.java b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/nmea/NmeaFileLogger.java
+index 5653fcfc..b16e1fe1 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/nmea/NmeaFileLogger.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/nmea/NmeaFileLogger.java
+@@ -33,6 +33,7 @@ import java.io.BufferedWriter;
+ import java.io.File;
+ import java.io.FileWriter;
+ import java.io.IOException;
++import java.nio.file.StandardOpenOption;
+ import java.util.concurrent.LinkedBlockingQueue;
+ import java.util.concurrent.ThreadPoolExecutor;
+ import java.util.concurrent.TimeUnit;
+@@ -41,7 +42,7 @@ import de.greenrobot.event.EventBus;
+
+ public class NmeaFileLogger {
+
+-    protected final static Object lock = new Object();
++    protected final static Object LOCK = new Object();
+     private static final Logger LOG = Logs.of(NmeaFileLogger.class);
+     String fileName;
+     private final static ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(1, 1, 60, TimeUnit.SECONDS,
+@@ -91,14 +92,22 @@ class NmeaWriteHandler implements Runnable {
+     @Override
+     public void run() {
+
+-        synchronized (NmeaFileLogger.lock) {
++        synchronized (NmeaFileLogger.LOCK) {
+
+             try {
+-                BufferedWriter writer = new BufferedWriter(new FileWriter(gpxFile, true));
+-                writer.write(nmeaSentence);
+-                writer.newLine();
+-                writer.close();
+-                Files.addToMediaDatabase(gpxFile, "text/plain");
++                BufferedWriter writer = null;
++                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++                    writer = java.nio.file.Files.newBufferedWriter(gpxFile.toPath(), StandardOpenOption.APPEND);
++                }
++                try {
++                    writer.write(nmeaSentence);
++                    writer.newLine();
++                    writer.close();
++                    Files.addToMediaDatabase(gpxFile, "text/plain");
++                }
++                catch (NullPointerException n) {
++                    LOG.error("Version not supported", n);
++                }
+
+             } catch (IOException e) {
+                 LOG.error("Error writing NMEA sentence", e);
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/opengts/OpenGTSLogger.java b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/opengts/OpenGTSLogger.java
+index bb8b378f..157e0376 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/opengts/OpenGTSLogger.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/opengts/OpenGTSLogger.java
+@@ -44,7 +44,7 @@ public class OpenGTSLogger implements FileLogger {
+     public OpenGTSLogger(Context context) {
+         this.context = context;
+         BatteryInfo batteryInfo = Systems.getBatteryInfo(context);
+-        this.batteryLevel = batteryInfo.BatteryLevel;
++        this.batteryLevel = batteryInfo.batteryLevel;
+     }
+
+     @Override
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/opengts/OpenGtsUdpWorker.java b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/opengts/OpenGtsUdpWorker.java
+index 9b082ab6..f415d98f 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/opengts/OpenGtsUdpWorker.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/loggers/opengts/OpenGtsUdpWorker.java
+@@ -80,7 +80,7 @@ public class OpenGtsUdpWorker extends Worker{
+             DatagramSocket socket = new DatagramSocket();
+             byte[] buffer = message.getBytes();
+             DatagramPacket packet = new DatagramPacket(buffer, buffer.length, InetAddress.getByName(server), port);
+-            LOG.debug("Sending UDP " + message);
++            LOG.debug("Sending UDP {}", message);
+             socket.send(packet);
+             socket.close();
+         }
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/FileSenderFactory.java b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/FileSenderFactory.java
+index 2defe6ba..bab57875 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/FileSenderFactory.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/FileSenderFactory.java
+@@ -83,7 +83,7 @@ public class FileSenderFactory {
+     public static void autoSendFiles(final String fileToSend) {
+
+         PreferenceHelper preferenceHelper = PreferenceHelper.getInstance();
+-        LOG.info("Auto-sending file " + fileToSend);
++        LOG.info("Auto-sending file {}", fileToSend);
+
+         File gpxFolder = new File(preferenceHelper.getGpsLoggerFolder());
+
+@@ -127,7 +127,7 @@ public class FileSenderFactory {
+
+
+         for (FileSender sender : senders) {
+-            LOG.debug("Sender: " + sender.getClass().getName());
++            LOG.debug("Sender: {}", sender.getClass().getName());
+             //Special case for OSM Uploader
+             if(!sender.accept(null, ".zip")){
+                 sender.uploadFile(files);
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/GpxReader.java b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/GpxReader.java
+index 49d21d4c..cb8d224e 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/GpxReader.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/GpxReader.java
+@@ -24,12 +24,16 @@ import android.location.Location;
+ import com.mendhak.gpslogger.common.BundleConstants;
+ import com.mendhak.gpslogger.common.SerializableLocation;
+ import com.mendhak.gpslogger.common.Strings;
++import com.mendhak.gpslogger.common.slf4j.Logs;
++
++import org.slf4j.Logger;
+ import org.w3c.dom.*;
+
+ import javax.xml.parsers.DocumentBuilder;
+ import javax.xml.parsers.DocumentBuilderFactory;
+ import java.io.File;
+ import java.io.FileInputStream;
++import java.io.InputStream;
+ import java.text.SimpleDateFormat;
+ import java.util.ArrayList;
+ import java.util.List;
+@@ -44,7 +48,8 @@ import java.util.TimeZone;
+  */
+ public class GpxReader {
+
+-    private static final SimpleDateFormat gpxDate = new SimpleDateFormat(Strings.getIsoDateTimeFormat());
++    private static final SimpleDateFormat GPX_DATE = new SimpleDateFormat(Strings.getIsoDateTimeFormat());
++    private static final Logger LOG = Logs.of(GpxReader.class);
+
+     public static List<SerializableLocation> getPoints(File gpxFile) throws Exception {
+         List<SerializableLocation> points;
+@@ -52,72 +57,79 @@ public class GpxReader {
+         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+         DocumentBuilder builder = factory.newDocumentBuilder();
+
+-        FileInputStream fis = new FileInputStream(gpxFile);
+-        Document dom = builder.parse(fis);
+-        Element root = dom.getDocumentElement();
+-        NodeList items = root.getElementsByTagName("trkpt");
+-
++        InputStream fis = null;
++        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++            fis = java.nio.file.Files.newInputStream(gpxFile.toPath());
++        }
+         points = new ArrayList<>();
+
+-        for (int j = 0; j < items.getLength(); j++) {
+-            Node item = items.item(j);
+-            NamedNodeMap attrs = item.getAttributes();
+-            NodeList props = item.getChildNodes();
++        try {
++            Document dom = builder.parse(fis);
++            Element root = dom.getDocumentElement();
++            NodeList items = root.getElementsByTagName("trkpt");
+
+-            Location pt = new Location("test");
+
+-            pt.setLatitude(Double.parseDouble(attrs.getNamedItem("lat").getNodeValue()));
+-            pt.setLongitude(Double.parseDouble(attrs.getNamedItem("lon").getNodeValue()));
++            for (int j = 0; j < items.getLength(); j++) {
++                Node item = items.item(j);
++                NamedNodeMap attrs = item.getAttributes();
++                NodeList props = item.getChildNodes();
+
+-            for (int k = 0; k < props.getLength(); k++) {
+-                Node item2 = props.item(k);
+-                String name = item2.getNodeName();
++                Location pt = new Location("test");
+
+-                if (name.equalsIgnoreCase("ele")) {
+-                    pt.setAltitude(Double.parseDouble(item2.getFirstChild().getNodeValue()));
+-                }
+-                if (name.equalsIgnoreCase("course")) {
+-                    pt.setBearing(Float.parseFloat(item2.getFirstChild().getNodeValue()));
+-                }
+-                if (name.equalsIgnoreCase("speed")) {
+-                    pt.setSpeed(Float.parseFloat(item2.getFirstChild().getNodeValue()));
+-                }
+-                if (name.equalsIgnoreCase(BundleConstants.HDOP)) {
+-                    pt.setAccuracy(Float.parseFloat(item2.getFirstChild().getNodeValue()) * 5);
+-                }
+-                if (name.equalsIgnoreCase("time")) {
+-                    String dateTimeString = item2.getFirstChild().getNodeValue();
+-                    if(dateTimeString.endsWith("Z")){
+-                        pt.setTime((getDateTimeFormatter().parse(dateTimeString)).getTime());
++                pt.setLatitude(Double.parseDouble(attrs.getNamedItem("lat").getNodeValue()));
++                pt.setLongitude(Double.parseDouble(attrs.getNamedItem("lon").getNodeValue()));
++
++                for (int k = 0; k < props.getLength(); k++) {
++                    Node item2 = props.item(k);
++                    String name = item2.getNodeName();
++
++                    if (name.equalsIgnoreCase("ele")) {
++                        pt.setAltitude(Double.parseDouble(item2.getFirstChild().getNodeValue()));
+                     }
+-                    else {
+-                        pt.setTime(getDateTimeWithOffsetFormatter().parse(dateTimeString).getTime());
++                    if (name.equalsIgnoreCase("course")) {
++                        pt.setBearing(Float.parseFloat(item2.getFirstChild().getNodeValue()));
+                     }
++                    if (name.equalsIgnoreCase("speed")) {
++                        pt.setSpeed(Float.parseFloat(item2.getFirstChild().getNodeValue()));
++                    }
++                    if (name.equalsIgnoreCase(BundleConstants.HDOP)) {
++                        pt.setAccuracy(Float.parseFloat(item2.getFirstChild().getNodeValue()) * 5);
++                    }
++                    if (name.equalsIgnoreCase("time")) {
++                        String dateTimeString = item2.getFirstChild().getNodeValue();
++                        if (dateTimeString.endsWith("Z")) {
++                            pt.setTime((getDateTimeFormatter().parse(dateTimeString)).getTime());
++                        } else {
++                            pt.setTime(getDateTimeWithOffsetFormatter().parse(dateTimeString).getTime());
++                        }
+
+-                }
+-
+-            }
++                    }
+
+-            for (int y = 0; y < props.getLength(); y++) {
+-                Node item3 = props.item(y);
+-                String name = item3.getNodeName();
+-                if (!name.equalsIgnoreCase("ele")) {
+-                    continue;
+                 }
+-                pt.setAltitude(Double.parseDouble(item3.getFirstChild().getNodeValue()));
+-            }
+
+-            points.add(new SerializableLocation(pt));
++                for (int y = 0; y < props.getLength(); y++) {
++                    Node item3 = props.item(y);
++                    String name = item3.getNodeName();
++                    if (!name.equalsIgnoreCase("ele")) {
++                        continue;
++                    }
++                    pt.setAltitude(Double.parseDouble(item3.getFirstChild().getNodeValue()));
++                }
+
+-        }
++                points.add(new SerializableLocation(pt));
+
+-        fis.close();
++            }
+
++            fis.close();
++        }
++        catch(NullPointerException n) {
++            LOG.error("Version not supported", n);
++        }
+         return points;
+     }
+
+     public static SimpleDateFormat getDateTimeFormatter() {
+-        SimpleDateFormat sdf = (SimpleDateFormat) gpxDate.clone();
++        SimpleDateFormat sdf = (SimpleDateFormat) GPX_DATE.clone();
+         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+         return sdf;
+     }
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/ZipHelper.java b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/ZipHelper.java
+index e9676d8f..29fcdfb5 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/ZipHelper.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/ZipHelper.java
+@@ -26,6 +26,10 @@ import java.io.BufferedInputStream;
+ import java.io.BufferedOutputStream;
+ import java.io.FileInputStream;
+ import java.io.FileOutputStream;
++import java.io.InputStream;
++import java.io.OutputStream;
++import java.nio.file.Files;
++import java.nio.file.Paths;
+ import java.util.zip.ZipEntry;
+ import java.util.zip.ZipOutputStream;
+
+@@ -43,26 +47,38 @@ public class ZipHelper {
+     public void zipFiles() {
+         try {
+             BufferedInputStream origin;
+-            FileOutputStream dest = new FileOutputStream(zipFile);
++            OutputStream dest = null;
++            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++                dest = java.nio.file.Files.newOutputStream(Paths.get(zipFile));
++            }
++
++            try {
++                ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+
+-            ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
++                byte data[] = new byte[BUFFER];
+
+-            byte data[] = new byte[BUFFER];
++                for (String f : files) {
++                    InputStream fi = null;
++                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++                        fi = java.nio.file.Files.newInputStream(Paths.get(f));
++                    }
+
+-            for (String f : files) {
+-                FileInputStream fi = new FileInputStream(f);
+-                origin = new BufferedInputStream(fi, BUFFER);
+-                ZipEntry entry = new ZipEntry(f.substring(f.lastIndexOf("/") + 1));
+-                out.putNextEntry(entry);
+-                int count;
+-                while ((count = origin.read(data, 0, BUFFER)) != -1) {
+-                    out.write(data, 0, count);
++                    origin = new BufferedInputStream(fi, BUFFER);
++                    ZipEntry entry = new ZipEntry(f.substring(f.lastIndexOf("/") + 1));
++                    out.putNextEntry(entry);
++                    int count;
++                    while ((count = origin.read(data, 0, BUFFER)) != -1) {
++                        out.write(data, 0, count);
++                    }
++                    out.closeEntry();
++                    origin.close();
+                 }
+-                out.closeEntry();
+-                origin.close();
+-            }
+
+-            out.close();
++                out.close();
++            }
++            catch (NullPointerException n) {
++                LOG.error("Version not supported");
++            }
+         } catch (Exception e) {
+             LOG.error("Could not create zip file", e);
+         }
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/customurl/CustomUrlManager.java b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/customurl/CustomUrlManager.java
+index bfd9ccee..c769c2ac 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/customurl/CustomUrlManager.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/customurl/CustomUrlManager.java
+@@ -16,6 +16,8 @@ import com.mendhak.gpslogger.senders.FileSender;
+ import org.apache.commons.csv.CSVFormat;
+ import org.apache.commons.csv.CSVRecord;
+ import org.slf4j.Logger;
++
++import java.io.BufferedReader;
+ import java.io.File;
+ import java.io.FileReader;
+ import java.io.Reader;
+@@ -63,79 +65,86 @@ public class CustomUrlManager extends FileSender {
+     private List<SerializableLocation> getLocationsFromCSV(File f) {
+         List<SerializableLocation> locations = new ArrayList<>();
+         try {
+-            Reader in = new FileReader(f);
+-            CSVFormat header = CSVFormat.DEFAULT.builder().setHeader(
+-                    CSVFileLogger.getCSVFileHeaders())
+-                    .setDelimiter(preferenceHelper.getCSVDelimiter())
+-                    .setSkipHeaderRecord(true)
+-                    .build();
+-
+-            Iterable<CSVRecord> records = header.parse(in);
+-            for(CSVRecord record : records){
+-                Location csvLoc = new Location(record.get(CSVFileLogger.FIELDS.PROVIDER));
+-                csvLoc.setTime(Long.parseLong(record.get(CSVFileLogger.FIELDS.TIMESTAMP_MILLIS)));
+-                csvLoc.setLatitude(Double.parseDouble( unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.LAT)) ));
+-                csvLoc.setLongitude(Double.parseDouble( unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.LON)) ));
+-
+-                if(!Strings.isNullOrEmpty(record.get(CSVFileLogger.FIELDS.ELEVATION))){
+-                    csvLoc.setAltitude(Double.parseDouble( unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.ELEVATION))));
+-                }
++            BufferedReader in = null;
++            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++                in = java.nio.file.Files.newBufferedReader(f.toPath());
++            }
++            try {
++                CSVFormat header = CSVFormat.DEFAULT.builder().setHeader(
++                                CSVFileLogger.getCSVFileHeaders())
++                        .setDelimiter(preferenceHelper.getCSVDelimiter())
++                        .setSkipHeaderRecord(true)
++                        .build();
+
+-                if(!Strings.isNullOrEmpty(record.get(CSVFileLogger.FIELDS.ACCURACY))){
+-                    csvLoc.setAccuracy(Float.parseFloat( unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.ACCURACY))));
+-                }
++                Iterable<CSVRecord> records = header.parse(in);
++                for (CSVRecord record : records) {
++                    Location csvLoc = new Location(record.get(CSVFileLogger.FIELDS.PROVIDER));
++                    csvLoc.setTime(Long.parseLong(record.get(CSVFileLogger.FIELDS.TIMESTAMP_MILLIS)));
++                    csvLoc.setLatitude(Double.parseDouble(unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.LAT))));
++                    csvLoc.setLongitude(Double.parseDouble(unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.LON))));
+
++                    if (!Strings.isNullOrEmpty(record.get(CSVFileLogger.FIELDS.ELEVATION))) {
++                        csvLoc.setAltitude(Double.parseDouble(unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.ELEVATION))));
++                    }
+
+-                if(!Strings.isNullOrEmpty(record.get(CSVFileLogger.FIELDS.BEARING))){
+-                    csvLoc.setBearing(Float.parseFloat( unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.BEARING))));
+-                }
++                    if (!Strings.isNullOrEmpty(record.get(CSVFileLogger.FIELDS.ACCURACY))) {
++                        csvLoc.setAccuracy(Float.parseFloat(unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.ACCURACY))));
++                    }
+
+-                if(!Strings.isNullOrEmpty(record.get(CSVFileLogger.FIELDS.SPEED))){
+-                    csvLoc.setSpeed(Float.parseFloat(unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.SPEED))));
+-                }
+
+-                Bundle b = new Bundle();
++                    if (!Strings.isNullOrEmpty(record.get(CSVFileLogger.FIELDS.BEARING))) {
++                        csvLoc.setBearing(Float.parseFloat(unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.BEARING))));
++                    }
+
+-                if(!Strings.isNullOrEmpty(record.get(CSVFileLogger.FIELDS.SATELLITES))){
+-                    b.putInt(BundleConstants.SATELLITES_FIX, Integer.parseInt(record.get(CSVFileLogger.FIELDS.SATELLITES)));
+-                }
++                    if (!Strings.isNullOrEmpty(record.get(CSVFileLogger.FIELDS.SPEED))) {
++                        csvLoc.setSpeed(Float.parseFloat(unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.SPEED))));
++                    }
+
+-                b.putString(BundleConstants.HDOP, unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.HDOP)));
+-                b.putString(BundleConstants.VDOP, unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.VDOP)));
+-                b.putString(BundleConstants.PDOP, unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.PDOP)));
++                    Bundle b = new Bundle();
+
+-                b.putString(BundleConstants.GEOIDHEIGHT, unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.GEOID_HEIGHT)));
+-                b.putString(BundleConstants.AGEOFDGPSDATA, record.get(CSVFileLogger.FIELDS.AGE_OF_DGPS_DATA));
+-                b.putString(BundleConstants.DGPSID, record.get(CSVFileLogger.FIELDS.DGPS_ID));
++                    if (!Strings.isNullOrEmpty(record.get(CSVFileLogger.FIELDS.SATELLITES))) {
++                        b.putInt(BundleConstants.SATELLITES_FIX, Integer.parseInt(record.get(CSVFileLogger.FIELDS.SATELLITES)));
++                    }
+
+-                if(!Strings.isNullOrEmpty(record.get(CSVFileLogger.FIELDS.BATTERY))){
+-                    b.putInt(BundleConstants.BATTERY_LEVEL, Integer.parseInt(record.get(CSVFileLogger.FIELDS.BATTERY)));
+-                }
++                    b.putString(BundleConstants.HDOP, unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.HDOP)));
++                    b.putString(BundleConstants.VDOP, unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.VDOP)));
++                    b.putString(BundleConstants.PDOP, unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.PDOP)));
+
+-                if(!Strings.isNullOrEmpty(record.get(CSVFileLogger.FIELDS.BATTERY_CHARGING))){
+-                    b.putBoolean(BundleConstants.BATTERY_CHARGING, Boolean.parseBoolean(record.get(CSVFileLogger.FIELDS.BATTERY_CHARGING)));
+-                }
++                    b.putString(BundleConstants.GEOIDHEIGHT, unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.GEOID_HEIGHT)));
++                    b.putString(BundleConstants.AGEOFDGPSDATA, record.get(CSVFileLogger.FIELDS.AGE_OF_DGPS_DATA));
++                    b.putString(BundleConstants.DGPSID, record.get(CSVFileLogger.FIELDS.DGPS_ID));
+
+-                b.putString(BundleConstants.ANNOTATION, record.get(CSVFileLogger.FIELDS.ANNOTATION));
+-                b.putString(BundleConstants.TIME_WITH_OFFSET, record.get(CSVFileLogger.FIELDS.TIME_WITH_OFFSET));
++                    if (!Strings.isNullOrEmpty(record.get(CSVFileLogger.FIELDS.BATTERY))) {
++                        b.putInt(BundleConstants.BATTERY_LEVEL, Integer.parseInt(record.get(CSVFileLogger.FIELDS.BATTERY)));
++                    }
+
+-                if(!Strings.isNullOrEmpty(record.get(CSVFileLogger.FIELDS.DISTANCE))){
+-                    b.putDouble(BundleConstants.DISTANCE, Double.parseDouble(unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.DISTANCE))));
+-                }
++                    if (!Strings.isNullOrEmpty(record.get(CSVFileLogger.FIELDS.BATTERY_CHARGING))) {
++                        b.putBoolean(BundleConstants.BATTERY_CHARGING, Boolean.parseBoolean(record.get(CSVFileLogger.FIELDS.BATTERY_CHARGING)));
++                    }
+
+-                if(!Strings.isNullOrEmpty(record.get(CSVFileLogger.FIELDS.START_TIMESTAMP_MILLIS))){
+-                    b.putLong(BundleConstants.STARTTIMESTAMP, Long.parseLong(record.get(CSVFileLogger.FIELDS.START_TIMESTAMP_MILLIS)));
+-                }
++                    b.putString(BundleConstants.ANNOTATION, record.get(CSVFileLogger.FIELDS.ANNOTATION));
++                    b.putString(BundleConstants.TIME_WITH_OFFSET, record.get(CSVFileLogger.FIELDS.TIME_WITH_OFFSET));
+
+-                b.putString(BundleConstants.PROFILE_NAME, record.get(CSVFileLogger.FIELDS.PROFILE_NAME));
+-                b.putString(BundleConstants.FILE_NAME, f.getName().replace(".csv",""));
++                    if (!Strings.isNullOrEmpty(record.get(CSVFileLogger.FIELDS.DISTANCE))) {
++                        b.putDouble(BundleConstants.DISTANCE, Double.parseDouble(unApplyDecimalComma(record.get(CSVFileLogger.FIELDS.DISTANCE))));
++                    }
+
+-                csvLoc.setExtras(b);
++                    if (!Strings.isNullOrEmpty(record.get(CSVFileLogger.FIELDS.START_TIMESTAMP_MILLIS))) {
++                        b.putLong(BundleConstants.STARTTIMESTAMP, Long.parseLong(record.get(CSVFileLogger.FIELDS.START_TIMESTAMP_MILLIS)));
++                    }
+
+-                SerializableLocation sLoc = new SerializableLocation(csvLoc);
+-                locations.add(sLoc);
+-            }
++                    b.putString(BundleConstants.PROFILE_NAME, record.get(CSVFileLogger.FIELDS.PROFILE_NAME));
++                    b.putString(BundleConstants.FILE_NAME, f.getName().replace(".csv", ""));
+
++                    csvLoc.setExtras(b);
++
++                    SerializableLocation sLoc = new SerializableLocation(csvLoc);
++                    locations.add(sLoc);
++                }
++            }
++            catch (NullPointerException n) {
++                LOG.error("Version not supported", n);
++            }
+         } catch (Exception e) {
+             LOG.error("Could not read locations from CSV file", e);
+         }
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/dropbox/DropboxWorker.java b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/dropbox/DropboxWorker.java
+index 3c700b46..43d274ff 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/dropbox/DropboxWorker.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/dropbox/DropboxWorker.java
+@@ -21,6 +21,7 @@ import org.slf4j.Logger;
+ import java.io.File;
+ import java.io.FileInputStream;
+ import java.io.InputStream;
++import java.nio.file.Files;
+
+ import de.greenrobot.event.EventBus;
+
+@@ -45,27 +46,34 @@ public class DropboxWorker extends Worker {
+
+         try {
+             LOG.debug("Beginning upload to dropbox...");
+-            InputStream inputStream = new FileInputStream(fileToUpload);
+-            DbxRequestConfig requestConfig = DbxRequestConfig.newBuilder("GPSLogger").build();
+-            DbxClientV2 mDbxClient;
+-
+-            if(!Strings.isNullOrEmpty(PreferenceHelper.getInstance().getDropboxRefreshToken())){
+-                DbxCredential dropboxCred = DbxCredential.Reader.readFully(PreferenceHelper.getInstance().getDropboxRefreshToken());
+-                mDbxClient = new DbxClientV2(requestConfig, dropboxCred);
++            InputStream inputStream = null;
++            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++                inputStream = java.nio.file.Files.newInputStream(fileToUpload.toPath());
+             }
+-            else {
+-                //For existing users that already have long lived access tokens stored.
+-                mDbxClient = new DbxClientV2(requestConfig, PreferenceHelper.getInstance().getDropboxLongLivedAccessKey());
++            try {
++                DbxRequestConfig requestConfig = DbxRequestConfig.newBuilder("GPSLogger").build();
++                DbxClientV2 mDbxClient;
++
++                if (!Strings.isNullOrEmpty(PreferenceHelper.getInstance().getDropboxRefreshToken())) {
++                    DbxCredential dropboxCred = DbxCredential.Reader.readFully(PreferenceHelper.getInstance().getDropboxRefreshToken());
++                    mDbxClient = new DbxClientV2(requestConfig, dropboxCred);
++                } else {
++                    //For existing users that already have long lived access tokens stored.
++                    mDbxClient = new DbxClientV2(requestConfig, PreferenceHelper.getInstance().getDropboxLongLivedAccessKey());
++                }
++
++                mDbxClient.files().uploadBuilder("/" + fileToUpload.getName()).withMode(WriteMode.OVERWRITE).uploadAndFinish(inputStream);
++
++                // Notify internal listeners
++                EventBus.getDefault().post(new UploadEvents.Dropbox().succeeded());
++                // Notify external listeners
++                Systems.sendFileUploadedBroadcast(getApplicationContext(), new String[]{fileToUpload.getAbsolutePath()}, "dropbox");
++
++                LOG.info("Dropbox - file uploaded");
++            }
++            catch (NullPointerException n) {
++                LOG.error("Version not supported", n);
+             }
+-
+-            mDbxClient.files().uploadBuilder("/" + fileToUpload.getName()).withMode(WriteMode.OVERWRITE).uploadAndFinish(inputStream);
+-
+-            // Notify internal listeners
+-            EventBus.getDefault().post(new UploadEvents.Dropbox().succeeded());
+-            // Notify external listeners
+-            Systems.sendFileUploadedBroadcast(getApplicationContext(), new String[]{fileToUpload.getAbsolutePath()}, "dropbox");
+-
+-            LOG.info("Dropbox - file uploaded");
+         } catch (Exception e) {
+             LOG.error("Could not upload to Dropbox" , e);
+             EventBus.getDefault().post(new UploadEvents.Dropbox().failed(e.getMessage(), e));
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/email/AutoEmailWorker.java b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/email/AutoEmailWorker.java
+index 2fef8973..3f142aa4 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/email/AutoEmailWorker.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/email/AutoEmailWorker.java
+@@ -3,6 +3,8 @@ package com.mendhak.gpslogger.senders.email;
+ import android.content.Context;
+ import android.util.Base64;
+
++
++
+ import androidx.annotation.NonNull;
+ import androidx.work.Worker;
+ import androidx.work.WorkerParameters;
+@@ -30,11 +32,13 @@ import java.io.ByteArrayOutputStream;
+ import java.io.File;
+ import java.io.FileInputStream;
+ import java.io.IOException;
++import java.io.InputStream;
+ import java.io.Writer;
+ import java.util.ArrayList;
+ import java.util.Arrays;
+ import java.util.UUID;
+
++
+ import de.greenrobot.event.EventBus;
+
+ public class AutoEmailWorker extends Worker {
+@@ -215,25 +219,33 @@ public class AutoEmailWorker extends Worker {
+     private static void attachFilesToWriter(Writer writer, String boundary, File[] files) throws IOException {
+         for (File f : files) {
+             ByteArrayOutputStream outputStream = new ByteArrayOutputStream((int) f.length());
+-            FileInputStream inputStream = new FileInputStream(f);
+-            Streams.copyIntoStream(inputStream, outputStream);
+-
+-            writer.write("--" + boundary + "\n");
+-            writer.write("Content-Type: application/" + Files.getMimeTypeFromFileName(f.getName()) + "; name=\"" + f.getName() + "\"\n");
+-            writer.write("Content-Disposition: attachment; filename=\"" + f.getName() + "\"\n");
+-            writer.write("Content-Transfer-Encoding: base64\n\n");
+-            String encodedFile = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
+-            writer.write(encodedFile);
+-            writer.write("\n");
++            InputStream inputStream = null;
++            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++                inputStream = java.nio.file.Files.newInputStream(f.toPath());
++            }
++            try {
++                Streams.copyIntoStream(inputStream, outputStream);
++
++                writer.write("--" + boundary + "\n");
++                writer.write("Content-Type: application/" + Files.getMimeTypeFromFileName(f.getName()) + "; name=\"" + f.getName() + "\"\n");
++                writer.write("Content-Disposition: attachment; filename=\"" + f.getName() + "\"\n");
++                writer.write("Content-Transfer-Encoding: base64\n\n");
++                String encodedFile = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
++                writer.write(encodedFile);
++                writer.write("\n");
++            }
++            catch (NullPointerException n) {
++                LOG.error("Version not supported", n);
++            }
+         }
+     }
+
+
+     private static void checkReply(SMTPClient sc) throws Exception {
+         if (SMTPReply.isNegativeTransient(sc.getReplyCode())) {
+-            throw new Exception("Transient SMTP error " +  sc.getReplyString());
++            throw new IOException("Transient SMTP error " +  sc.getReplyString());
+         } else if (SMTPReply.isNegativePermanent(sc.getReplyCode())) {
+-            throw new Exception("Permanent SMTP error " +  sc.getReplyString());
++            throw new IllegalArgumentException("Permanent SMTP error " +  sc.getReplyString());
+         }
+     }
+ }
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/ftp/FtpWorker.java b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/ftp/FtpWorker.java
+index f29947b8..79b00fd1 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/ftp/FtpWorker.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/ftp/FtpWorker.java
+@@ -25,7 +25,9 @@ import org.slf4j.Logger;
+ import java.io.File;
+ import java.io.FileInputStream;
+ import java.io.IOException;
++import java.io.InputStream;
+ import java.io.PrintWriter;
++import java.nio.file.Files;
+ import java.util.ArrayList;
+
+ import javax.net.ssl.KeyManager;
+@@ -141,18 +143,26 @@ public class FtpWorker extends Worker {
+                     logServerReply(client);
+                 }
+
+-                FileInputStream inputStream = new FileInputStream(gpxFile);
+-                client.changeWorkingDirectory(directory);
+-                client.setFileType(FTP.BINARY_FILE_TYPE);
+-                boolean result = client.storeFile(fileName, inputStream);
+-                inputStream.close();
+-                logServerReply(client);
+-                if (result) {
+-                    LOG.debug("Successfully FTPd file " + fileName);
+-                } else {
+-                    jobResult = new UploadEvents.Ftp().failed( "Failed to FTP file " + fileName , null);
+-                    LOG.debug("Failed to FTP file " + fileName);
+-                    return false;
++                InputStream inputStream = null;
++                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++                    inputStream = Files.newInputStream(gpxFile.toPath());
++                }
++                try {
++                    client.changeWorkingDirectory(directory);
++                    client.setFileType(FTP.BINARY_FILE_TYPE);
++                    boolean result = client.storeFile(fileName, inputStream);
++                    inputStream.close();
++                    logServerReply(client);
++                    if (result) {
++                        LOG.debug("Successfully FTPd file " + fileName);
++                    } else {
++                        jobResult = new UploadEvents.Ftp().failed("Failed to FTP file " + fileName, null);
++                        LOG.debug("Failed to FTP file " + fileName);
++                        return false;
++                    }
++                }
++                catch (NullPointerException n) {
++                    LOG.error("Version not supported", n);
+                 }
+
+             } else {
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/googledrive/GoogleDriveManager.java b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/googledrive/GoogleDriveManager.java
+index fbe1652c..63e140a1 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/googledrive/GoogleDriveManager.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/googledrive/GoogleDriveManager.java
+@@ -62,11 +62,11 @@ public class GoogleDriveManager extends FileSender {
+
+     public static AuthState getAuthState() {
+         AuthState authState = new AuthState();
+-        String google_drive_auth_state = PreferenceHelper.getInstance().getGoogleDriveAuthState();
++        String googleDriveAuthState = PreferenceHelper.getInstance().getGoogleDriveAuthState();
+
+-        if (!Strings.isNullOrEmpty(google_drive_auth_state)) {
++        if (!Strings.isNullOrEmpty(googleDriveAuthState)) {
+             try {
+-                authState = AuthState.jsonDeserialize(google_drive_auth_state);
++                authState = AuthState.jsonDeserialize(googleDriveAuthState);
+
+             } catch (JSONException e) {
+                 LOG.debug(e.getMessage(), e);
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/googledrive/GoogleDriveWorker.java b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/googledrive/GoogleDriveWorker.java
+index c8fb14bb..bd492a0c 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/googledrive/GoogleDriveWorker.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/googledrive/GoogleDriveWorker.java
+@@ -26,6 +26,7 @@ import org.slf4j.Logger;
+
+ import java.io.File;
+ import java.io.FileInputStream;
++import java.io.InputStream;
+ import java.net.URLEncoder;
+ import java.util.concurrent.atomic.AtomicBoolean;
+
+@@ -233,30 +234,37 @@ public class GoogleDriveWorker extends Worker {
+     }
+
+     private String updateFileContents(String accessToken, String gpxFileId, File fileToUpload) throws Exception {
+-        FileInputStream fis = new FileInputStream(fileToUpload);
++        InputStream fis = null;
++        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
++            fis = java.nio.file.Files.newInputStream(fileToUpload.toPath());
++        }
+         String fileId = null;
++        try {
+
+-        String fileUpdateUrl = "https://www.googleapis.com/upload/drive/v3/files/" + gpxFileId + "?uploadType=media";
+-
+-        OkHttpClient client = new OkHttpClient();
+-        Request.Builder requestBuilder = new Request.Builder().url(fileUpdateUrl);
++            String fileUpdateUrl = "https://www.googleapis.com/upload/drive/v3/files/" + gpxFileId + "?uploadType=media";
+
+-        requestBuilder.addHeader("Authorization", "Bearer " + accessToken);
+-        RequestBody body = RequestBody.create(MediaType.parse(Files.getMimeTypeFromFileName(fileToUpload.getName())), Streams.getByteArrayFromInputStream(fis));
+-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+-            requestBuilder.addHeader("X-HTTP-Method-Override", "PATCH");
+-        }
+-        requestBuilder = requestBuilder.method("PATCH", body);
++            OkHttpClient client = new OkHttpClient();
++            Request.Builder requestBuilder = new Request.Builder().url(fileUpdateUrl);
+
+-        Request request = requestBuilder.build();
+-        Response response = client.newCall(request).execute();
+-        String fileMetadata = response.body().string();
+-        LOG.debug(fileMetadata);
+-        response.body().close();
++            requestBuilder.addHeader("Authorization", "Bearer " + accessToken);
++            RequestBody body = RequestBody.create(MediaType.parse(Files.getMimeTypeFromFileName(fileToUpload.getName())), Streams.getByteArrayFromInputStream(fis));
++            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
++                requestBuilder.addHeader("X-HTTP-Method-Override", "PATCH");
++            }
++            requestBuilder = requestBuilder.method("PATCH", body);
+
+-        JSONObject fileMetadataJson = new JSONObject(fileMetadata);
+-        fileId = fileMetadataJson.getString("id");
++            Request request = requestBuilder.build();
++            Response response = client.newCall(request).execute();
++            String fileMetadata = response.body().string();
++            LOG.debug(fileMetadata);
++            response.body().close();
+
++            JSONObject fileMetadataJson = new JSONObject(fileMetadata);
++            fileId = fileMetadataJson.getString("id");
++        }
++        catch (NullPointerException n) {
++            LOG.error("Version not supported", n);
++        }
+         return fileId;
+     }
+
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/opengts/OpenGTSManager.java b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/opengts/OpenGTSManager.java
+index b140477b..ac7c4280 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/opengts/OpenGTSManager.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/opengts/OpenGTSManager.java
+@@ -189,11 +189,11 @@ public class OpenGTSManager extends FileSender {
+         for (int i = 1; i < msg.length(); i++) {
+             chk ^= msg.charAt(i);
+         }
+-        String chk_s = Integer.toHexString(chk).toUpperCase();
+-        while (chk_s.length() < 2) {
+-            chk_s = "0" + chk_s;
++        String chkS = Integer.toHexString(chk).toUpperCase();
++        while (chkS.length() < 2) {
++            chkS = "0" + chkS;
+         }
+-        return chk_s;
++        return chkS;
+     }
+
+
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/osm/OpenStreetMapManager.java b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/osm/OpenStreetMapManager.java
+index e1f0a9e7..9edc3cfa 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/osm/OpenStreetMapManager.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/osm/OpenStreetMapManager.java
+@@ -81,11 +81,11 @@ public class OpenStreetMapManager extends FileSender {
+
+     public static AuthState getAuthState() {
+         AuthState authState = new AuthState();
+-        String open_street_map_auth_state = PreferenceHelper.getInstance().getOSMAuthState();
++        String openStreetMapAuthState = PreferenceHelper.getInstance().getOSMAuthState();
+
+-        if (!Strings.isNullOrEmpty(open_street_map_auth_state)) {
++        if (!Strings.isNullOrEmpty(openStreetMapAuthState)) {
+             try {
+-                authState = AuthState.jsonDeserialize(open_street_map_auth_state);
++                authState = AuthState.jsonDeserialize(openStreetMapAuthState);
+
+             } catch (JSONException e) {
+                 LOG.error(e.getMessage(), e);
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/sftp/SFTPWorker.java b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/sftp/SFTPWorker.java
+index 9cedc589..8986b867 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/senders/sftp/SFTPWorker.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/senders/sftp/SFTPWorker.java
+@@ -1,6 +1,7 @@
+ package com.mendhak.gpslogger.senders.sftp;
+
+ import android.content.Context;
++import android.os.Build;
+ import android.util.Base64;
+
+ import androidx.annotation.NonNull;
+@@ -12,6 +13,7 @@ import com.jcraft.jsch.ChannelSftp;
+ import com.jcraft.jsch.HostKey;
+ import com.jcraft.jsch.JSch;
+ import com.jcraft.jsch.JSchException;
++import com.jcraft.jsch.Session;
+ import com.jcraft.jsch.SftpException;
+ import com.mendhak.gpslogger.common.PreferenceHelper;
+ import com.mendhak.gpslogger.common.Strings;
+@@ -25,6 +27,7 @@ import org.slf4j.Logger;
+
+ import java.io.File;
+ import java.io.FileInputStream;
++import java.nio.file.Files;
+ import java.security.Security;
+ import java.util.Properties;
+
+@@ -70,7 +73,7 @@ public class SFTPWorker extends Worker {
+         String privateKeyPassphrase = preferenceHelper.getSFTPPrivateKeyPassphrase();
+
+         LOG.debug("SFTP Job onRun");
+-        com.jcraft.jsch.Session session = null;
++        Session session = null;
+         JSch.setLogger(new SftpLogger());
+         final JSch jsch = new JSch();
+         FileInputStream fis = null;
+@@ -106,7 +109,9 @@ public class SFTPWorker extends Worker {
+                 LOG.debug("Changing directory to " + remoteDir);
+                 channelSftp.cd(remoteDir);
+                 LOG.debug("Uploading " + fileToUpload.getName() + " to remote server");
+-                channelSftp.put(new FileInputStream(fileToUpload), fileToUpload.getName(), ChannelSftp.OVERWRITE);
++                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
++                    channelSftp.put(Files.newInputStream(fileToUpload.toPath()), fileToUpload.getName(), ChannelSftp.OVERWRITE);
++                }
+
+                 LOG.debug("Disconnecting");
+                 channelSftp.disconnect();
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/components/FaqExpandableListAdapter.java b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/components/FaqExpandableListAdapter.java
+index f6f1f204..87ead990 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/components/FaqExpandableListAdapter.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/components/FaqExpandableListAdapter.java
+@@ -54,7 +54,7 @@ public class FaqExpandableListAdapter extends ArrayAdapter<String> {
+
+         final ExpandableTextView expTv1 = (ExpandableTextView) convertView.findViewById(R.id.expand_text_view);
+         expTv1.setText(Html.fromHtml(values.get(position)));
+-        TextView tv = (TextView)expTv1.findViewById(R.id.expandable_text);
++        TextView tv = (TextView)expTv1.findViewById(com.ms.square.android.expandabletextview.R.id.expandable_text);
+         tv.setMovementMethod(LinkMovementMethod.getInstance());
+         tv.setTag(String.valueOf(position));
+
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/components/InteractiveScrollView.java b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/components/InteractiveScrollView.java
+index 7ef20676..3703ec7a 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/components/InteractiveScrollView.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/components/InteractiveScrollView.java
+@@ -14,20 +14,17 @@ public class InteractiveScrollView extends ScrollView {
+
+     public InteractiveScrollView(Context context, AttributeSet attrs, int defStyle) {
+         super(context, attrs, defStyle);
+-        init();
+     }
+
+     public InteractiveScrollView(Context context, AttributeSet attrs) {
+         super(context, attrs);
+-        init();
+     }
+
+     public InteractiveScrollView(Context context) {
+         super(context);
+-        init();
+     }
+
+-    private void init() {
++    public void init() {
+         setFadingEdgeLength(0);
+         setVerticalFadingEdgeEnabled(false);
+         setHorizontalFadingEdgeEnabled(false);
+@@ -108,4 +105,4 @@ public class InteractiveScrollView extends ScrollView {
+     public interface OnScrolledUpListener{
+         public void onScrolledUp(int scrollY);
+     }
+-}
+\ No newline at end of file
++}
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/components/SimpleErrorDialog.java b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/components/SimpleErrorDialog.java
+index 43447f75..8dd39547 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/components/SimpleErrorDialog.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/components/SimpleErrorDialog.java
+@@ -14,7 +14,7 @@ public class SimpleErrorDialog extends SimpleDialog<SimpleErrorDialog> {
+     public static SimpleErrorDialog build(){
+         return new SimpleErrorDialog()
+                 .title(R.string.error)
+-                .neut(R.string.copy);
++                .neut(androidx.preference.R.string.copy);
+     }
+
+     @Override
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/display/AnnotationViewFragment.java b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/display/AnnotationViewFragment.java
+index 8be0a4cf..12bb97f3 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/display/AnnotationViewFragment.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/display/AnnotationViewFragment.java
+@@ -136,7 +136,7 @@ public class AnnotationViewFragment extends GenericViewFragment implements Simpl
+                 String color = btnObj.getString("color");
+
+                 if (idx < 0 || idx >= buttonList.size()) {
+-                    LOG.error("Wrong index in settings: " + idx);
++                    LOG.error("Wrong index in settings: {}", idx);
+                     continue;
+                 }
+
+@@ -146,7 +146,7 @@ public class AnnotationViewFragment extends GenericViewFragment implements Simpl
+             }
+
+         } catch (Exception e) {
+-            LOG.error("Exception loading annotation settings: " + e.getMessage(), e);
++            LOG.error("Exception loading annotation settings: {}", e.getMessage(), e);
+         }
+     }
+
+@@ -172,7 +172,7 @@ public class AnnotationViewFragment extends GenericViewFragment implements Simpl
+             }
+
+             if (idx == null || idx < 0 || idx >= buttonList.size()) {
+-                LOG.error("Could not find button " + dialogTag);
++                LOG.error("Could not find button {}", dialogTag);
+                 return true;
+             }
+
+@@ -239,7 +239,7 @@ public class AnnotationViewFragment extends GenericViewFragment implements Simpl
+     }
+
+     private void onBtnClick(ButtonWrapper wrapper) {
+-        LOG.info("Notification Annotation entered : " + wrapper.getText());
++        LOG.info("Notification Annotation entered : {}", wrapper.getText());
+         selectedButton = wrapper;
+         EventBus.getDefault().post(new CommandEvents.Annotate(wrapper.getText()));
+     }
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/display/GenericViewFragment.java b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/display/GenericViewFragment.java
+index 9b7cac6d..fe3547cd 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/display/GenericViewFragment.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/display/GenericViewFragment.java
+@@ -85,7 +85,7 @@ public abstract class GenericViewFragment extends Fragment {
+
+
+     @EventBusHook
+-    public void onEventMainThread(ServiceEvents.LocationServicesUnavailable locationServicesUnavailable) {
++    public void onEventMainThread(ServiceEvents.LocationServicesUnavailable locationServicesUnavailable) { //NOPMD - suppressed EmptyMethodInAbstractClassShouldBeAbstract - TODO explain reason for suppression //NOPMD - suppressed EmptyMethodInAbstractClassShouldBeAbstract - TODO explain reason for suppression
+         //Literally keeping this here only because the eventbus requries at least one onEvent method in this class.
+     }
+
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/display/GpsDetailedViewFragment.java b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/display/GpsDetailedViewFragment.java
+index 863cec51..bc996756 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/display/GpsDetailedViewFragment.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/display/GpsDetailedViewFragment.java
+@@ -240,7 +240,7 @@ public class GpsDetailedViewFragment extends GenericViewFragment {
+
+
+         } catch (Exception ex) {
+-            LOG.error("showPreferencesAndMessages " + ex.getMessage(), ex);
++            LOG.error("showPreferencesAndMessages {}", ex.getMessage(), ex);
+         }
+
+
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/display/GpsLogViewFragment.java b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/display/GpsLogViewFragment.java
+index 7772a424..8c98e5de 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/display/GpsLogViewFragment.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/display/GpsLogViewFragment.java
+@@ -126,9 +126,9 @@ public class GpsLogViewFragment extends GenericViewFragment implements CompoundB
+         CheckBox chkLocationsOnly = (CheckBox) rootView.findViewById(R.id.logview_chkLocationsOnly);
+
+         StringBuilder sb = new StringBuilder();
+-        for(ILoggingEvent message : SessionLogcatAppender.Statuses){
++        for(ILoggingEvent message : SessionLogcatAppender.statuses){
+
+-            if(message.getMarker() == SessionLogcatAppender.MARKER_LOCATION){
++            if(message.getMarker() == SessionLogcatAppender.markerLocation){
+                 sb.append(getFormattedMessage(message.getMessage(), R.color.accentColorComplementary, message.getTimeStamp(), true));
+             }
+
+@@ -161,11 +161,11 @@ public class GpsLogViewFragment extends GenericViewFragment implements CompoundB
+
+         String messageFormat = "%s<font color='#%s'>" + (bold ? "<b>": "") + "%s" + (bold ? "</b>": "") + "</font><br />";
+
+-        message = message.replaceAll("\n", "<br />");
++        String formattedMessage = message.replaceAll("\n", "<br />");
+
+         return String.format(messageFormat,
+                 dateStamp,
+-                Integer.toHexString(ContextCompat.getColor(rootView.getContext(), colorResourceId)).substring(2), message);
++                Integer.toHexString(ContextCompat.getColor(rootView.getContext(), colorResourceId)).substring(2), formattedMessage);
+
+     }
+
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/display/GpsSimpleViewFragment.java b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/display/GpsSimpleViewFragment.java
+index cf32b564..7cfd9454 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/display/GpsSimpleViewFragment.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/display/GpsSimpleViewFragment.java
+@@ -198,32 +198,32 @@ public class GpsSimpleViewFragment extends GenericViewFragment implements View.O
+     }
+
+     private enum IconColorIndicator {
+-        Good,
+-        Warning,
+-        Bad,
+-        Inactive
++        GOOD,
++        WARNING,
++        BAD,
++        INACTIVE
+     }
+
+     private void clearColor(ImageView imgView){
+-        setColor(imgView, IconColorIndicator.Inactive);
++        setColor(imgView, IconColorIndicator.INACTIVE);
+     }
+
+     private void setColor(ImageView imgView, IconColorIndicator colorIndicator){
+         imgView.clearColorFilter();
+
+-        if(colorIndicator == IconColorIndicator.Inactive){
++        if(colorIndicator == IconColorIndicator.INACTIVE){
+             return;
+         }
+
+         int color = -1;
+         switch(colorIndicator){
+-            case Bad:
++            case BAD:
+                 color = Color.parseColor("#FFEEEE");
+                 break;
+-            case Good:
++            case GOOD:
+                 color = ContextCompat.getColor(context, R.color.accentColor);
+                 break;
+-            case Warning:
++            case WARNING:
+                 color = Color.parseColor("#D4FFA300");
+                 break;
+         }
+@@ -342,13 +342,13 @@ public class GpsSimpleViewFragment extends GenericViewFragment implements View.O
+             txtAccuracy.setText(Strings.getDistanceDisplay(getActivity(), accuracy, preferenceHelper.shouldDisplayImperialUnits(), true));
+
+             if (accuracy > 500) {
+-                setColor(imgAccuracy, IconColorIndicator.Warning);
++                setColor(imgAccuracy, IconColorIndicator.WARNING);
+             }
+
+             if (accuracy > 900) {
+-                setColor(imgAccuracy, IconColorIndicator.Bad);
++                setColor(imgAccuracy, IconColorIndicator.BAD);
+             } else {
+-                setColor(imgAccuracy, IconColorIndicator.Good);
++                setColor(imgAccuracy, IconColorIndicator.GOOD);
+             }
+         }
+
+@@ -356,7 +356,7 @@ public class GpsSimpleViewFragment extends GenericViewFragment implements View.O
+         clearColor(imgAltitude);
+
+         if (locationInfo.hasAltitude()) {
+-            setColor(imgAltitude, IconColorIndicator.Good);
++            setColor(imgAltitude, IconColorIndicator.GOOD);
+             TextView txtAltitude = (TextView) rootView.findViewById(R.id.simpleview_txtAltitude);
+
+             txtAltitude.setText(Strings.getDistanceDisplay(getActivity(), locationInfo.getAltitude(), preferenceHelper.shouldDisplayImperialUnits(), false));
+@@ -367,7 +367,7 @@ public class GpsSimpleViewFragment extends GenericViewFragment implements View.O
+
+         if (locationInfo.hasSpeed()) {
+
+-            setColor(imgSpeed, IconColorIndicator.Good);
++            setColor(imgSpeed, IconColorIndicator.GOOD);
+
+             TextView txtSpeed = (TextView) rootView.findViewById(R.id.simpleview_txtSpeed);
+             txtSpeed.setText(Strings.getSpeedDisplay(getActivity(), locationInfo.getSpeed(), preferenceHelper.shouldDisplayImperialUnits()));
+@@ -377,7 +377,7 @@ public class GpsSimpleViewFragment extends GenericViewFragment implements View.O
+         clearColor(imgDirection);
+
+         if (locationInfo.hasBearing()) {
+-            setColor(imgDirection, IconColorIndicator.Good);
++            setColor(imgDirection, IconColorIndicator.GOOD);
+             imgDirection.setRotation(locationInfo.getBearing());
+
+             TextView txtDirection = (TextView) rootView.findViewById(R.id.simpleview_txtDirection);
+@@ -456,7 +456,7 @@ public class GpsSimpleViewFragment extends GenericViewFragment implements View.O
+         TextView txtSatelliteCount = (TextView) rootView.findViewById(R.id.simpleview_txtSatelliteCount);
+
+         if(count > -1) {
+-            setColor(imgSatelliteCount, IconColorIndicator.Good);
++            setColor(imgSatelliteCount, IconColorIndicator.GOOD);
+
+             AlphaAnimation fadeIn = new AlphaAnimation(0.6f, 1.0f);
+             fadeIn.setDuration(1200);
+@@ -473,7 +473,7 @@ public class GpsSimpleViewFragment extends GenericViewFragment implements View.O
+
+     public void onWaitingForLocation(boolean inProgress) {
+
+-        LOG.debug(inProgress + "");
++        LOG.debug("{}", inProgress);
+
+         if(!session.isStarted()){
+             actionButton.setProgress(0);
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/DropboxAuthorizationFragment.java b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/DropboxAuthorizationFragment.java
+index 84e07837..59a57188 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/DropboxAuthorizationFragment.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/DropboxAuthorizationFragment.java
+@@ -139,7 +139,7 @@ public class DropboxAuthorizationFragment extends PreferenceFragmentCompat imple
+
+     @EventBusHook
+     public void onEventMainThread(UploadEvents.Dropbox d){
+-        LOG.debug("Dropbox Event completed, success: " + d.success);
++        LOG.debug("Dropbox Event completed, success: {}", d.success);
+         Dialogs.hideProgress();
+         if(!d.success){
+             Dialogs.showError(getString(R.string.sorry), "Could not upload to Dropbox", d.message, d.throwable,(FragmentActivity) getActivity());
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/FtpFragment.java b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/FtpFragment.java
+index 5a71cfdb..c244ec38 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/FtpFragment.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/FtpFragment.java
+@@ -212,7 +212,7 @@ public class FtpFragment
+
+     @EventBusHook
+     public void onEventMainThread(UploadEvents.Ftp o){
+-            LOG.debug("FTP Event completed, success: " + o.success);
++        LOG.debug("FTP Event completed, success: {}", o.success);
+             Dialogs.hideProgress();
+             if(!o.success){
+                 String ftpMessages = (o.ftpMessages == null) ? "" : TextUtils.join("",o.ftpMessages);
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/GeneralSettingsFragment.java b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/GeneralSettingsFragment.java
+index 8978f11e..a8d30f2c 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/GeneralSettingsFragment.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/GeneralSettingsFragment.java
+@@ -55,7 +55,7 @@ public class GeneralSettingsFragment extends PreferenceFragmentCompat implements
+         Preference.OnPreferenceClickListener,
+         Preference.OnPreferenceChangeListener {
+
+-    Logger LOG = Logs.of(GeneralSettingsFragment.class);
++    Logger log = Logs.of(GeneralSettingsFragment.class);
+
+     @Override
+     public void onCreate(Bundle savedInstanceState) {
+@@ -184,12 +184,12 @@ public class GeneralSettingsFragment extends PreferenceFragmentCompat implements
+
+         if(preference.getKey().equals("changelanguage")){
+             PreferenceHelper.getInstance().setUserSpecifiedLocale((String) newValue);
+-            LOG.debug("Language chosen: " + PreferenceHelper.getInstance().getUserSpecifiedLocale());
++            log.debug("Language chosen: {}", PreferenceHelper.getInstance().getUserSpecifiedLocale());
+             return true;
+         }
+         if(preference.getKey().equals("coordinatedisplayformat")){
+             PreferenceHelper.getInstance().setDisplayLatLongFormat(PreferenceNames.DegreesDisplayFormat.valueOf(newValue.toString()));
+-            LOG.debug("Coordinate format chosen: " + PreferenceHelper.getInstance().getDisplayLatLongFormat());
++            log.debug("Coordinate format chosen: {}", PreferenceHelper.getInstance().getDisplayLatLongFormat());
+             setCoordinatesFormatPreferenceItem();
+             return true;
+         }
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/GoogleDriveSettingsFragment.java b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/GoogleDriveSettingsFragment.java
+index d15707d3..f2b5f68c 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/GoogleDriveSettingsFragment.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/GoogleDriveSettingsFragment.java
+@@ -279,7 +279,7 @@ public class GoogleDriveSettingsFragment extends PreferenceFragmentCompat implem
+
+     @EventBusHook
+     public void onEventMainThread(UploadEvents.GoogleDrive d) {
+-        LOG.debug("Google Drive Event completed, success: " + d.success);
++        LOG.debug("Google Drive Event completed, success: {}", d.success);
+         Dialogs.hideProgress();
+         if (!d.success) {
+             Dialogs.showError(getString(R.string.sorry), "Could not upload to Google Drive", d.message, d.throwable, (FragmentActivity) getActivity());
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/LoggingSettingsFragment.java b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/LoggingSettingsFragment.java
+index d4d6b725..3fd47382 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/LoggingSettingsFragment.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/LoggingSettingsFragment.java
+@@ -97,13 +97,13 @@ public class LoggingSettingsFragment extends PreferenceFragmentCompat
+         newFilePref.setSummary(getFileCreationLabelFromValue(preferenceHelper.getNewFileCreationMode()));
+
+
+-        SwitchPreferenceCompat chkfile_prefix_serial = findPreference(PreferenceNames.PREFIX_SERIAL_TO_FILENAME);
++        SwitchPreferenceCompat chkFilePrefixSerial = findPreference(PreferenceNames.PREFIX_SERIAL_TO_FILENAME);
+         if (Strings.isNullOrEmpty(Strings.getBuildSerial())) {
+-            chkfile_prefix_serial.setEnabled(false);
+-            chkfile_prefix_serial.setSummary("This option not available on older phones or if a serial id is not present");
++            chkFilePrefixSerial.setEnabled(false);
++            chkFilePrefixSerial.setSummary("This option not available on older phones or if a serial id is not present");
+         } else {
+-            chkfile_prefix_serial.setEnabled(true);
+-            chkfile_prefix_serial.setSummary(chkfile_prefix_serial.getSummary().toString() + "(" + Strings.getBuildSerial() + ")");
++            chkFilePrefixSerial.setEnabled(true);
++            chkFilePrefixSerial.setSummary(chkFilePrefixSerial.getSummary().toString() + "(" + Strings.getBuildSerial() + ")");
+         }
+
+
+@@ -124,7 +124,7 @@ public class LoggingSettingsFragment extends PreferenceFragmentCompat
+                     public void onClick(View view) {
+
+                         Intent targetActivity = new Intent(getActivity(), MainPreferenceActivity.class);
+-                        targetActivity.putExtra("preference_fragment", MainPreferenceActivity.PREFERENCE_FRAGMENTS.CUSTOMURL);
++                        targetActivity.putExtra("preference_fragment", MainPreferenceActivity.PreferenceFragments.CUSTOMURL);
+                         startActivity(targetActivity);
+                     }
+                 });
+@@ -274,7 +274,7 @@ public class LoggingSettingsFragment extends PreferenceFragmentCompat
+                 for(String filePath : selectedFilePaths){
+                     File f = new File(filePath);
+                     f.delete();
+-                    LOG.warn("Deleted file: " + f.getName());
++                    LOG.warn("Deleted file: {}", f.getName());
+                 }
+                 Dialogs.hideProgress();
+             });
+@@ -306,7 +306,7 @@ public class LoggingSettingsFragment extends PreferenceFragmentCompat
+             if(!((SwitchPreferenceCompat) preference).isChecked() && (Boolean)newValue  ) {
+
+                 Intent targetActivity = new Intent(getActivity(), MainPreferenceActivity.class);
+-                targetActivity.putExtra("preference_fragment", MainPreferenceActivity.PREFERENCE_FRAGMENTS.OPENGTS);
++                targetActivity.putExtra("preference_fragment", MainPreferenceActivity.PreferenceFragments.OPENGTS);
+                 startActivity(targetActivity);
+             }
+
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/OwnCloudSettingsFragment.java b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/OwnCloudSettingsFragment.java
+index 08f50062..fc5bbe49 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/OwnCloudSettingsFragment.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/OwnCloudSettingsFragment.java
+@@ -205,8 +205,9 @@ public class OwnCloudSettingsFragment
+
+     @EventBusHook
+     public void onEventMainThread(UploadEvents.OwnCloud o){
+-        LOG.debug("OwnCloud Event completed, success: " + o.success);
+-
++        if(LOG.isDebugEnabled()) {
++            LOG.debug("OwnCloud Event completed, success: {}", o.success);
++        }
+         Dialogs.hideProgress();
+         if(!o.success){
+             Dialogs.showError(getString(R.string.sorry), "OwnCloud Test Failed", o.message, o.throwable, (FragmentActivity) getActivity());
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/SFTPSettingsFragment.java b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/SFTPSettingsFragment.java
+index d6579fb0..1adffba8 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/SFTPSettingsFragment.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/SFTPSettingsFragment.java
+@@ -288,13 +288,13 @@ public class SFTPSettingsFragment extends PreferenceFragmentCompat
+
+     @EventBusHook
+     public void onEventMainThread(final UploadEvents.SFTP o){
+-        LOG.debug("SFTP Event completed, success: " + o.success);
++        LOG.debug("SFTP Event completed, success: {}", o.success);
+
+         Dialogs.hideProgress();
+         if(!o.success){
+             if( !Strings.isNullOrEmpty(o.hostKey)){
+-                LOG.debug("SFTP HostKey " + o.hostKey);
+-                LOG.debug("SFTP Fingerprint " + o.fingerprint);
++                LOG.debug("SFTP HostKey {}", o.hostKey);
++                LOG.debug("SFTP Fingerprint {}", o.fingerprint);
+                 String codeGreen = Integer.toHexString(ContextCompat.getColor(getActivity(), R.color.accentColorComplementary)).substring(2);
+                 String promptMessage = String.format("Fingerprint: <br /><font color='#%s' face='monospace'>%s</font> <br /><br /> Host Key: <br /><font color='#%s' face='monospace'>%s</font>",
+                                                         codeGreen, o.fingerprint, codeGreen, o.hostKey);
+diff --git a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/UploadSettingsFragment.java b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/UploadSettingsFragment.java
+index c98333ad..dd058948 100644
+--- a/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/UploadSettingsFragment.java
++++ b/gpslogger/src/main/java/com/mendhak/gpslogger/ui/fragments/settings/UploadSettingsFragment.java
+@@ -23,7 +23,6 @@ import android.content.Intent;
+ import android.os.Bundle;
+ import android.text.InputType;
+ import android.view.View;
+-import android.widget.Switch;
+
+ import androidx.annotation.NonNull;
+ import androidx.appcompat.widget.SwitchCompat;
+@@ -34,7 +33,6 @@ import com.mendhak.gpslogger.MainPreferenceActivity;
+ import com.mendhak.gpslogger.R;
+ import com.mendhak.gpslogger.common.PreferenceHelper;
+ import com.mendhak.gpslogger.common.PreferenceNames;
+-import com.mendhak.gpslogger.common.Strings;
+ import com.mendhak.gpslogger.ui.components.SwitchPlusClickPreference;
+
+ import eltos.simpledialogfragment.SimpleDialog;
+@@ -76,7 +74,7 @@ public class UploadSettingsFragment
+                     @Override
+                     public void onClick(View view) {
+                         Intent intent = new Intent(getActivity(), MainPreferenceActivity.class);
+-                        intent.putExtra("preference_fragment", MainPreferenceActivity.PREFERENCE_FRAGMENTS.OSM);
++                        intent.putExtra("preference_fragment", MainPreferenceActivity.PreferenceFragments.OSM);
+                         startActivity(intent);
+                     }
+                 });
+@@ -91,7 +89,7 @@ public class UploadSettingsFragment
+                     @Override
+                     public void onClick(View view) {
+                         Intent intent = new Intent(getActivity(), MainPreferenceActivity.class);
+-                        intent.putExtra("preference_fragment", MainPreferenceActivity.PREFERENCE_FRAGMENTS.EMAIL);
++                        intent.putExtra("preference_fragment", MainPreferenceActivity.PreferenceFragments.EMAIL);
+                         startActivity(intent);
+                     }
+                 });
+@@ -106,7 +104,7 @@ public class UploadSettingsFragment
+                     @Override
+                     public void onClick(View view) {
+                         Intent intent = new Intent(getActivity(), MainPreferenceActivity.class);
+-                        intent.putExtra("preference_fragment", MainPreferenceActivity.PREFERENCE_FRAGMENTS.OPENGTS);
++                        intent.putExtra("preference_fragment", MainPreferenceActivity.PreferenceFragments.OPENGTS);
+                         startActivity(intent);
+                     }
+                 });
+@@ -121,7 +119,7 @@ public class UploadSettingsFragment
+                     @Override
+                     public void onClick(View view) {
+                         Intent intent = new Intent(getActivity(), MainPreferenceActivity.class);
+-                        intent.putExtra("preference_fragment", MainPreferenceActivity.PREFERENCE_FRAGMENTS.FTP);
++                        intent.putExtra("preference_fragment", MainPreferenceActivity.PreferenceFragments.FTP);
+                         startActivity(intent);
+                     }
+                 });
+@@ -136,7 +134,7 @@ public class UploadSettingsFragment
+             @Override
+             public void onClick(View view) {
+                 Intent intent = new Intent(getActivity(), MainPreferenceActivity.class);
+-                intent.putExtra("preference_fragment", MainPreferenceActivity.PREFERENCE_FRAGMENTS.OWNCLOUD);
++                intent.putExtra("preference_fragment", MainPreferenceActivity.PreferenceFragments.OWNCLOUD);
+                 startActivity(intent);
+             }
+         });
+@@ -151,7 +149,7 @@ public class UploadSettingsFragment
+             @Override
+             public void onClick(View view) {
+                 Intent intent = new Intent(getActivity(), MainPreferenceActivity.class);
+-                intent.putExtra("preference_fragment", MainPreferenceActivity.PREFERENCE_FRAGMENTS.SFTP);
++                intent.putExtra("preference_fragment", MainPreferenceActivity.PreferenceFragments.SFTP);
+                 startActivity(intent);
+             }
+         });
+@@ -170,7 +168,7 @@ public class UploadSettingsFragment
+                     public void onClick(View view) {
+
+                         Intent intent = new Intent(getActivity(), MainPreferenceActivity.class);
+-                        intent.putExtra("preference_fragment", MainPreferenceActivity.PREFERENCE_FRAGMENTS.CUSTOMURL);
++                        intent.putExtra("preference_fragment", MainPreferenceActivity.PreferenceFragments.CUSTOMURL);
+                         startActivity(intent);
+                     }
+                 });
+@@ -187,7 +185,7 @@ public class UploadSettingsFragment
+                     public void onClick(View view) {
+
+                         Intent intent = new Intent(getActivity(), MainPreferenceActivity.class);
+-                        intent.putExtra("preference_fragment", MainPreferenceActivity.PREFERENCE_FRAGMENTS.DROPBOX);
++                        intent.putExtra("preference_fragment", MainPreferenceActivity.PreferenceFragments.DROPBOX);
+                         startActivity(intent);
+                     }
+                 });
+@@ -205,7 +203,7 @@ public class UploadSettingsFragment
+             public void onClick(View view) {
+
+                 Intent intent = new Intent(getActivity(), MainPreferenceActivity.class);
+-                intent.putExtra("preference_fragment", MainPreferenceActivity.PREFERENCE_FRAGMENTS.GOOGLEDRIVE);
++                intent.putExtra("preference_fragment", MainPreferenceActivity.PreferenceFragments.GOOGLEDRIVE);
+                 startActivity(intent);
+             }
+         });
+diff --git a/gpslogger/src/test/java/com/mendhak/gpslogger/ui/DialogsTest.java b/gpslogger/src/test/java/com/mendhak/gpslogger/ui/DialogsTest.java
+index b4ec1a7f..1bf077b4 100644
+--- a/gpslogger/src/test/java/com/mendhak/gpslogger/ui/DialogsTest.java
++++ b/gpslogger/src/test/java/com/mendhak/gpslogger/ui/DialogsTest.java
+@@ -1,5 +1,6 @@
+ package com.mendhak.gpslogger.ui;
+
++
+ import androidx.test.filters.SmallTest;
+ import org.junit.Test;
+ import org.junit.runner.RunWith;
+diff --git a/gradle/wrapper/gradle-wrapper.properties b/gradle/wrapper/gradle-wrapper.properties
+index da1db5f0..48c0a02c 100644
+--- a/gradle/wrapper/gradle-wrapper.properties
++++ b/gradle/wrapper/gradle-wrapper.properties
+@@ -1,5 +1,5 @@
+ distributionBase=GRADLE_USER_HOME
+ distributionPath=wrapper/dists
+-distributionUrl=https\://services.gradle.org/distributions/gradle-8.0-bin.zip
++distributionUrl=https\://services.gradle.org/distributions/gradle-8.7-bin.zip
+ zipStoreBase=GRADLE_USER_HOME
+ zipStorePath=wrapper/dists
