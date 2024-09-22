@@ -1,0 +1,67 @@
+A falha nos testes de **CertificateValidationWorkflowTestMe** está relacionada a uma configuração incorreta com o uso de
+`@InjectMocks`. A mensagem de erro principal é:
+
+> `Cannot instantiate @InjectMocks field named 'certificateValidationWorkflow'! Cause: the type
+'CertificateValidationWorkflow' has no default constructor`.
+
+### Principais pontos da falha:
+
+1. **Falta de um construtor padrão (default constructor)**:
+   - A classe **CertificateValidationWorkflow** não possui um construtor padrão (sem argumentos). O framework
+   **Mockito** tenta injetar as dependências, mas não consegue instanciar a classe porque não há um construtor padrão
+   disponível.
+
+2. **Erro no uso de `@InjectMocks`**:
+   - O `@InjectMocks` é usado para injetar os mocks nas dependências de uma classe. No entanto, o problema aqui é que o
+   **CertificateValidationWorkflow** não pode ser instanciado sem um construtor padrão ou sem fornecer explicitamente os
+   mocks necessários.
+
+### Soluções recomendadas:
+
+1. **Adicionar um construtor padrão à classe `CertificateValidationWorkflow`**:
+   - Se possível, adicione um construtor padrão (sem parâmetros) à classe **CertificateValidationWorkflow**. Isso
+   permitirá que o Mockito crie uma instância da classe automaticamente.
+
+   ```java
+   public CertificateValidationWorkflow() {
+       // Construtor padrão
+   }
+   ```
+
+2. **Fornecer os mocks necessários**:
+   - Se a classe **CertificateValidationWorkflow** depende de outras classes que precisam ser injetadas, adicione os
+   mocks adequados usando a anotação `@Mock` e depois injete manualmente ou use **MockitoAnnotations.openMocks()** no
+   método `setUp()`.
+
+   Exemplo:
+   ```java
+   @Mock
+   private SomeDependency someDependency;
+
+   @InjectMocks
+   private CertificateValidationWorkflow certificateValidationWorkflow;
+
+   @Before
+   public void setUp() {
+       MockitoAnnotations.openMocks(this);
+   }
+   ```
+
+3. **Instanciar explicitamente a classe com as dependências necessárias**:
+   - Em vez de depender do Mockito para injetar as dependências, você pode instanciar a classe diretamente no método
+   `setUp()`, fornecendo os mocks ou objetos reais necessários como parâmetros no construtor.
+
+   Exemplo:
+   ```java
+   @Before
+   public void setUp() {
+       certificateValidationWorkflow = new CertificateValidationWorkflow(someDependency);
+   }
+   ```
+
+### Próximos passos:
+- Adicione um construtor padrão ou forneça os mocks manualmente.
+- Reconfigure os testes para garantir que as dependências sejam injetadas corretamente.
+
+Após esses ajustes, execute novamente os testes para verificar se o problema foi resolvido. Caso precise de ajuda com a
+implementação dessas soluções, estou à disposição!
