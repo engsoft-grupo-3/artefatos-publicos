@@ -1,0 +1,34 @@
+Os resultados dos testes de **MathsTestMe** indicam que duas falhas ocorreram, principalmente relacionadas à comparação
+de números de ponto flutuante. Aqui está a análise dos resultados e dos problemas encontrados:
+
+### Problemas Encontrados:
+1. **Erro de Comparação de Ponto Flutuante**:
+   - As mensagens de erro mostram que o método `assertEquals` foi utilizado para comparar números de ponto flutuante,
+   mas sem especificar um **delta** (margem de erro), o que é essencial ao lidar com valores de ponto flutuante devido
+   a imprecisões inerentes a esse tipo de dado.
+   - O erro ocorreu nos métodos:
+     - `testCalculateDistance` (linha 13)
+     - `testMpsToKnots` (linha 19)
+
+### Solução para os Bugs:
+- **Uso de `assertEquals(expected, actual, delta)`**:
+  - Para comparar números de ponto flutuante em testes unitários, a abordagem correta é fornecer um **delta**, que é
+  uma margem aceitável de erro entre os valores esperados e atuais. Por exemplo:
+    ```java
+    assertEquals(expected, actual, 0.0001);
+    ```
+    Isso permite que pequenos desvios, comuns em cálculos de ponto flutuante, não causem falhas no teste.
+
+### Próximos Passos:
+1. **Corrigir os testes**:
+   - Nos métodos `testCalculateDistance` e `testMpsToKnots`, adicione um delta apropriado ao `assertEquals` para
+   corrigir a falha.
+
+   Exemplo de como ajustar o código:
+   ```java
+   assertEquals(expected, actual, 0.0001); // Escolha um delta adequado para a precisão necessária
+   ```
+
+2. **Re-executar os testes**:
+   - Após ajustar os testes, execute-os novamente para garantir que as comparações de ponto flutuante sejam tratadas
+   corretamente e que os testes passem sem erros.
