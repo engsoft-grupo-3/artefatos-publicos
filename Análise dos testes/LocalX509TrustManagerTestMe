@@ -1,0 +1,66 @@
+Os testes de **LocalX509TrustManagerTestMe** falharam devido a vários problemas, incluindo `NullPointerException`,
+erros no uso de mocks com **Mockito** e problemas com o **KeyStore** não inicializado.
+
+### Análise das falhas:
+
+1. **NullPointerException no método `testCheckClientTrusted`**:
+   - A exceção foi gerada porque um certificado **X509Certificate** estava nulo e, portanto, o método
+   `getSubjectX500Principal()` não pôde ser invocado.
+   - Isso sugere que o mock ou o objeto real de **X509Certificate** não foi configurado corretamente no teste. É
+   necessário garantir que o certificado seja mockado ou instanciado corretamente antes de ser verificado.
+
+2. **KeyStore não inicializado em `testCheckServerTrusted` e `testIsKnownServer`**:
+   - A exceção **KeyStoreException** indica que o **KeyStore** usado no teste não foi inicializado. Um **KeyStore**
+   precisa ser carregado corretamente com as chaves ou certificados antes de ser usado.
+   - Para resolver isso, o **KeyStore** precisa ser inicializado antes de sua utilização nos testes.
+   Exemplo:
+
+   ```java
+   KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+   keyStore.load(null, null);  // Inicialização do KeyStore
+   ```
+
+3. **Erro no uso de **Mockito**: `InvalidUseOfMatchersException` no `testCheckServerTrusted`**:
+   - A mensagem de erro indica que houve um uso incorreto de **matchers** do **Mockito** fora do contexto correto
+   (stubbing ou verificação).
+   - Certifique-se de usar **matchers** como `any()` ou `anyInt()` apenas em situações apropriadas, como quando estiver
+   usando `when(...)` ou `verify(...)`. Por exemplo:
+
+   ```java
+   when(mock.get(any())).thenReturn(someValue);  // Exemplo correto de uso
+   ```
+
+4. **Problemas gerais de mockagem e inicialização**:
+   - Em vários testes, como em `testGetAcceptedIssuers`, a configuração dos mocks parece estar incorreta. **Mockito**
+   está reclamando do uso impróprio de **matchers**. É necessário garantir que os mocks sejam configurados corretamente
+   e que os métodos finais ou privados não estejam sendo mockados.
+
+### Recomendações:
+
+1. **Mockar corretamente os certificados e o contexto de `X509Certificate`**:
+   - Certifique-se de que os certificados **X509Certificate** estejam sendo mockados corretamente antes de serem usados
+   nos métodos de verificação. Por exemplo:
+
+   ```java
+   @Mock
+   X509Certificate mockCertificate;
+
+   when(mockCertificate.getSubjectX500Principal()).thenReturn(new X500Principal("CN=Test"));
+   ```
+
+2. **Inicializar corretamente o KeyStore**:
+   - O **KeyStore** deve ser carregado e inicializado corretamente em todos os testes onde for usado, como mostrado
+   anteriormente.
+
+3. **Corrigir o uso de matchers no Mockito**:
+   - Ajuste o uso de **matchers** no **Mockito**, garantindo que sejam utilizados corretamente no contexto de
+   stubbing ou verificação. Verifique o uso de `when(...)` ou `verify(...)` para evitar exceções de uso incorreto de
+   **matchers**.
+
+4. **Configurar corretamente as dependências no método `setUp()`**:
+   - As dependências e os objetos mockados devem ser configurados corretamente no método `setUp()` antes de serem
+   usados nos testes. Isso garantirá que os testes tenham os objetos apropriados para funcionar corretamente.
+
+### Conclusão:
+Esses problemas podem ser resolvidos com a configuração adequada de mocks, inicialização correta do **KeyStore** e
+ajustes no uso de **Mockito**. Após essas correções, reexecute os testes para garantir que os erros foram resolvidos.
