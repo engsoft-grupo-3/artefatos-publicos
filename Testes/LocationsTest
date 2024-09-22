@@ -1,0 +1,42 @@
+Executing tasks: [:gpslogger:testDebugUnitTest, --tests, com.mendhak.gpslogger.common.LocationsTest] in project C:\Users\adm\Desktop\ES-entrega3\gpslogger
+
+Configuration cache is an incubating feature.
+Calculating task graph as no configuration cache is available for tasks: :gpslogger:testDebugUnitTest --tests com.mendhak.gpslogger.common.LocationsTest
+> Configure project :gpslogger
+AGPBI: {"kind":"warning","text":"The option setting 'android.jetifier.ignorelist=jsch-0.1.67.jar' is experimental.","sources":[{}]}
+> Task :gpslogger:buildTranslationArray UP-TO-DATE
+> Task :gpslogger:copyFAQsIntoAssets
+> Task :gpslogger:preBuild
+> Task :gpslogger:preDebugBuild
+> Task :gpslogger:preDebugUnitTestBuild
+> Task :gpslogger:generateDebugResValues UP-TO-DATE
+> Task :gpslogger:javaPreCompileDebug UP-TO-DATE
+> Task :gpslogger:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :gpslogger:generateDebugBuildConfig UP-TO-DATE
+> Task :gpslogger:processDebugJavaRes NO-SOURCE
+> Task :gpslogger:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :gpslogger:processDebugUnitTestJavaRes NO-SOURCE
+> Task :gpslogger:extractDeepLinksDebug UP-TO-DATE
+> Task :gpslogger:generateDebugResources UP-TO-DATE
+> Task :gpslogger:mapDebugSourceSetPaths UP-TO-DATE
+> Task :gpslogger:checkDebugAarMetadata UP-TO-DATE
+> Task :gpslogger:mergeDebugResources UP-TO-DATE
+> Task :gpslogger:processDebugMainManifest UP-TO-DATE
+> Task :gpslogger:processDebugManifest UP-TO-DATE
+> Task :gpslogger:processDebugManifestForPackage UP-TO-DATE
+> Task :gpslogger:processDebugResources UP-TO-DATE
+> Task :gpslogger:compileDebugJavaWithJavac UP-TO-DATE
+> Task :gpslogger:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :gpslogger:bundleDebugClassesToRuntimeJar UP-TO-DATE
+> Task :gpslogger:compileDebugUnitTestJavaWithJavac UP-TO-DATE
+> Task :gpslogger:testDebugUnitTest
+
+0 problems were found storing the configuration cache.
+
+See the complete report at file:///C:/Users/adm/Desktop/ES-entrega3/gpslogger/build/reports/configuration-cache/cb0lhpbzhydy9s14jucfjeg7w/seldhtpqjtzxiytgqarqcfa3/configuration-cache-report.html
+BUILD SUCCESSFUL in 2s
+19 actionable tasks: 2 executed, 17 up-to-date
+Configuration cache entry stored.
+
+Build Analyzer results available
+00:17:26: Execution finished ':gpslogger:testDebugUnitTest --tests "com.mendhak.gpslogger.common.LocationsTest"'.
