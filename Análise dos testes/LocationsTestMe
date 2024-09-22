@@ -1,0 +1,56 @@
+Analisando os resultados dos testes da classe **LocationsTestMe**, os principais problemas apontados estão relacionados
+a duas falhas:
+
+1. **testGetLocationWithAdjustedAltitude**
+2. **testGetLocationAdjustedForGPSWeekRollover**
+
+Ambos os testes falharam devido a uma comparação de valores nulos entre as instâncias de `android.location.Location`. A
+mensagem de erro indica que o teste esperava um objeto `Location` com valor `null`, mas recebeu outro objeto `Location`
+também com valor `null`. No entanto, apesar de ambos os valores sendo `null`, a comparação falhou, o que sugere que a
+falha não se deve ao valor em si, mas ao comportamento da comparação de objetos `Location`.
+
+### Análise dos problemas:
+1. **Comparação de objetos `Location`**:
+   - Mesmo que o conteúdo do objeto `Location` seja `null`, o método `assertEquals` está comparando referências de
+   objetos diferentes. Portanto, ele falha na comparação, uma vez que o método `assertEquals` compara referências de
+   objetos, não apenas os valores.
+
+2. **Possível solução**:
+   - Modificar os testes para comparar apenas os atributos relevantes do objeto `Location` em vez de comparar as
+   referências do objeto diretamente. Por exemplo, ao invés de comparar os objetos `Location` inteiros, é melhor
+   verificar se os campos dentro do objeto, como latitude, longitude e altitude, têm os valores esperados.
+   - Para comparar `null` corretamente, uma verificação explícita de nulidade usando `assertNull()` pode ser uma
+   solução mais apropriada.
+
+### Sugestões de correção:
+- **testGetLocationWithAdjustedAltitude**:
+  - Verificar se o ajuste de altitude está sendo feito corretamente e se o retorno está sendo corretamente manipulado
+  antes de compará-lo no teste. Você pode adicionar uma verificação para `null` explícita no teste.
+
+  Exemplo:
+  ```java
+  Location location = getLocationWithAdjustedAltitude();
+  assertNotNull(location);  // Garante que o objeto não é nulo
+  assertEquals(expectedAltitude, location.getAltitude(), 0.001);  // Compara apenas o valor de altitude
+  ```
+
+- **testGetLocationAdjustedForGPSWeekRollover**:
+  - Similarmente, verificar se o ajuste de localização com a virada da semana do GPS está retornando os valores
+  adequados e compará-los diretamente em vez de comparar os objetos `Location` inteiros.
+
+  Exemplo:
+  ```java
+  Location location = getLocationAdjustedForGPSWeekRollover();
+  assertNotNull(location);  // Garante que o objeto não é nulo
+  assertEquals(expectedLatitude, location.getLatitude(), 0.001);  // Compara latitude
+  assertEquals(expectedLongitude, location.getLongitude(), 0.001);  // Compara longitude
+  ```
+
+### Possíveis bugs:
+- **Manejo inadequado de valores nulos**: Os testes falham porque não há tratamento adequado para objetos `Location`
+nulos. O código de produção deve ser revisado para garantir que, caso um `Location` seja `null`, ele seja tratado
+corretamente.
+- **Comparação de objetos complexos**: Como `Location` é um objeto complexo, compará-lo diretamente pode não ser a
+abordagem mais adequada. Focar nas propriedades específicas do objeto pode ajudar a evitar falhas.
+
+Essas mudanças devem melhorar a precisão dos testes e resolver os problemas com as comparações de objetos `Location`.
