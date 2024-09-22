@@ -1,0 +1,37 @@
+A execução dos testes da classe **CertificateValidationExceptionTestMe** identificou uma série de falhas. Aqui está um
+resumo dos problemas encontrados:
+
+1. **`testFillInStackTrace`**: O teste falhou porque era esperado um `java.lang.Throwable` com a mensagem "message", mas
+o resultado foi uma `com.mendhak.gpslogger.common.network.CertificateValidationException`. Isso sugere que a exceção
+personalizada `CertificateValidationException` não está substituindo corretamente o comportamento de `Throwable`
+esperado.
+
+2. **`testGetLocalizedMessage`**: O teste falhou com a expectativa de um resultado que foi definido como
+`replaceMeWithExpectedResult`, mas o valor retornado foi `null`. Isso indica que o método `getLocalizedMessage` não está
+retornando uma mensagem adequada ou que a implementação está incompleta.
+
+3. **`testGetCause`**: O teste falhou ao comparar o retorno de `getCause`. Esperava-se um `Throwable` com a mensagem
+"message", mas o retorno foi `null`, sugerindo que a causa da exceção não está sendo corretamente atribuída.
+
+4. **`testToString`**: Este teste falhou ao comparar a string retornada. O valor esperado era
+`replaceMeWithExpectedResult`, mas a exceção retornou o nome completo da classe
+`com.mendhak.gpslogger.common.network.CertificateValidationException`. Isso indica que o método `toString` da exceção
+personalizada não está retornando o valor adequado.
+
+5. **`testGetStackTrace`**: O teste falhou devido à diferença nos comprimentos dos arrays de stack trace. Esperava-se um
+stack trace simples, mas o retorno foi um stack trace completo do JDK, sugerindo que o método `getStackTrace` não está
+retornando o que era esperado ou que a expectativa do teste está incorreta.
+
+6. **`testInitCause`**: O teste falhou ao tentar sobrescrever a causa com um `Throwable`, lançando uma
+`IllegalStateException`, indicando que a implementação do método `initCause` da exceção personalizada não permite a
+sobrescrita da causa.
+
+7. **`testGetSuppressed`**: O teste falhou devido a diferenças nos arrays de exceções suprimidas. Esperava-se um
+`Throwable` com a mensagem "message", mas o array retornado estava vazio. Isso indica que a exceção personalizada não
+está armazenando ou gerenciando corretamente as exceções suprimidas.
+
+8. **`testGetMessage`**: O teste falhou esperando um valor `replaceMeWithExpectedResult`, mas o retorno foi `null`.
+Isso sugere que o método `getMessage` da exceção não está retornando uma mensagem adequada.
+
+Esses resultados indicam que há problemas com a implementação da classe `CertificateValidationException`, especialmente
+no que diz respeito à forma como ela lida com a causa, a mensagem, e o stack trace.
