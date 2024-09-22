@@ -1,0 +1,32 @@
+O relatório dos testes mostra que a maioria dos testes falhou devido a uma série de razões, como valores esperados não
+sendo definidos corretamente (`replaceMeWithExpectedResult`), objetos nulos, ou formatos de datas/hora divergentes entre
+o valor esperado e o real. Aqui estão os passos principais que você pode seguir para corrigir os erros:
+
+1. **Corrigir valores esperados nos testes:**
+   - Em vários testes, o valor esperado está definido como `replaceMeWithExpectedResult`, que é um valor placeholder.
+   Precisa substituir esses valores placeholders pelos resultados esperados corretos. Por exemplo, no teste
+   `testGetIsoDateTime`, o valor esperado deve ser algo como `"2024-09-16T23:22:00.000Z"` e não
+   `replaceMeWithExpectedResult`.
+
+2. **Inicializar objetos nulos:**
+   - Muitos erros de `NullPointerException` estão ocorrendo porque objetos essenciais, como o `Context` ou
+   `SharedPreferences`, não foram inicializados. Nos testes que dependem desses objetos, você precisa garantir que
+   eles estão corretamente instanciados antes de serem usados.
+     - Para o `Context`, uma solução pode ser usar um `MockContext` ou outro tipo de mock de framework de testes como
+     `Mockito` para simular o comportamento do contexto em testes unitários.
+     - Para objetos de configuração, como `SharedPreferences`, pode usar `Mockito` para simular o comportamento
+     ou fornecer uma instância válida.
+
+3. **Corrigir formatação de data e hora:**
+   - Algumas falhas estão relacionadas ao formato de data e hora. Por exemplo, no teste `testGetIsoDateTimeFormat`, o
+   valor esperado era `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`, enquanto o resultado foi algo diferente.
+   - Verifique se o formato esperado e o obtido correspondem corretamente e, se necessário, ajuste o formato no código
+   ou no teste.
+
+4. **Verificar arquivos de configuração ausentes:**
+   - O erro envolvendo o `PreferenceHelper` está ocorrendo porque `SharedPreferences` não foi inicializado.
+   Certifique-se de que as configurações necessárias estão simuladas ou configuradas corretamente no ambiente de teste.
+
+5. **Conferir detalhes nos relatórios de teste:**
+   - O relatório do JUnit detalha cada falha individualmente. Abra o relatório de testes gerado no caminho especificado
+   para obter mais detalhes sobre cada erro específico.
