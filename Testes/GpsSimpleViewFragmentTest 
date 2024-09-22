@@ -1,0 +1,2007 @@
+Executing tasks: [:gpslogger:testDebugUnitTest, --tests, com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest] in project C:\Users\adm\Desktop\ES-entrega3\gpslogger
+
+Configuration cache is an incubating feature.
+Calculating task graph as no configuration cache is available for tasks: :gpslogger:testDebugUnitTest --tests com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest
+> Configure project :gpslogger
+AGPBI: {"kind":"warning","text":"The option setting 'android.jetifier.ignorelist=jsch-0.1.67.jar' is experimental.","sources":[{}]}
+> Task :gpslogger:buildTranslationArray UP-TO-DATE
+> Task :gpslogger:copyFAQsIntoAssets
+> Task :gpslogger:preBuild
+> Task :gpslogger:preDebugBuild
+> Task :gpslogger:preDebugUnitTestBuild
+> Task :gpslogger:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :gpslogger:generateDebugResValues UP-TO-DATE
+> Task :gpslogger:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :gpslogger:javaPreCompileDebug UP-TO-DATE
+> Task :gpslogger:processDebugJavaRes NO-SOURCE
+> Task :gpslogger:processDebugUnitTestJavaRes NO-SOURCE
+> Task :gpslogger:generateDebugResources UP-TO-DATE
+> Task :gpslogger:generateDebugBuildConfig UP-TO-DATE
+> Task :gpslogger:extractDeepLinksDebug UP-TO-DATE
+> Task :gpslogger:mapDebugSourceSetPaths UP-TO-DATE
+> Task :gpslogger:checkDebugAarMetadata UP-TO-DATE
+> Task :gpslogger:mergeDebugResources UP-TO-DATE
+> Task :gpslogger:processDebugMainManifest UP-TO-DATE
+> Task :gpslogger:processDebugManifest UP-TO-DATE
+> Task :gpslogger:processDebugManifestForPackage UP-TO-DATE
+> Task :gpslogger:processDebugResources UP-TO-DATE
+> Task :gpslogger:compileDebugJavaWithJavac UP-TO-DATE
+> Task :gpslogger:bundleDebugClassesToCompileJar UP-TO-DATE
+> Task :gpslogger:bundleDebugClassesToRuntimeJar UP-TO-DATE
+> Task :gpslogger:compileDebugUnitTestJavaWithJavac UP-TO-DATE
+> Task :gpslogger:testDebugUnitTest
+
+
+Cannot instantiate @InjectMocks field named 'gpsSimpleViewFragment' of type 'class com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment'.
+You haven't provided the instance at field declaration so I tried to construct the instance.
+However the constructor or the initialization block threw an exception : Cannot invoke "com.mendhak.gpslogger.common.AppSettings.getApplicationContext()" because the return value of "com.mendhak.gpslogger.common.AppSettings.getInstance()" is null
+
+org.mockito.exceptions.misusing.InjectMocksException:
+Cannot instantiate @InjectMocks field named 'gpsSimpleViewFragment' of type 'class com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment'.
+You haven't provided the instance at field declaration so I tried to construct the instance.
+However the constructor or the initialization block threw an exception : Cannot invoke "com.mendhak.gpslogger.common.AppSettings.getApplicationContext()" because the return value of "com.mendhak.gpslogger.common.AppSettings.getInstance()" is null
+
+	at app//com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.setUp(GpsSimpleViewFragmentTest.java:108)
+	at java.base@17.0.11/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base@17.0.11/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base@17.0.11/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base@17.0.11/java.lang.reflect.Method.invoke(Method.java:568)
+	at app//org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at app//org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at app//org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at app//org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+	at app//org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+	at app//org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at app//org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at app//org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at app//org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at app//org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at app//org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at app//org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at app//org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at app//org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at app//org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at app//org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at app//org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base@17.0.11/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base@17.0.11/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base@17.0.11/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base@17.0.11/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at app//worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at app//worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+Caused by: java.lang.NullPointerException: Cannot invoke "com.mendhak.gpslogger.common.AppSettings.getApplicationContext()" because the return value of "com.mendhak.gpslogger.common.AppSettings.getInstance()" is null
+	at com.mendhak.gpslogger.common.PreferenceHelper.getInstance(PreferenceHelper.java:52)
+	at com.mendhak.gpslogger.ui.fragments.display.GenericViewFragment.<init>(GenericViewFragment.java:58)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.<init>(GpsSimpleViewFragment.java:62)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480)
+	at org.mockito.internal.util.reflection.ReflectionMemberAccessor.lambda$newInstance$0(ReflectionMemberAccessor.java:29)
+	at org.mockito.internal.util.reflection.ReflectionMemberAccessor.newInstance(ReflectionMemberAccessor.java:29)
+	at org.mockito.internal.util.reflection.ReflectionMemberAccessor.newInstance(ReflectionMemberAccessor.java:20)
+	at org.mockito.internal.util.reflection.FieldInitializer$NoArgConstructorInstantiator.instantiate(FieldInitializer.java:203)
+	at org.mockito.internal.util.reflection.FieldInitializer.acquireFieldInstance(FieldInitializer.java:146)
+	at org.mockito.internal.util.reflection.FieldInitializer.initialize(FieldInitializer.java:91)
+	at org.mockito.internal.configuration.injection.PropertyAndSetterInjection.initializeInjectMocksField(PropertyAndSetterInjection.java:101)
+	at org.mockito.internal.configuration.injection.PropertyAndSetterInjection.processInjection(PropertyAndSetterInjection.java:82)
+	at org.mockito.internal.configuration.injection.MockInjectionStrategy.process(MockInjectionStrategy.java:68)
+	at org.mockito.internal.configuration.injection.MockInjectionStrategy.relayProcessToNextStrategy(MockInjectionStrategy.java:91)
+	at org.mockito.internal.configuration.injection.MockInjectionStrategy.process(MockInjectionStrategy.java:71)
+	at org.mockito.internal.configuration.injection.MockInjectionStrategy.relayProcessToNextStrategy(MockInjectionStrategy.java:91)
+	at org.mockito.internal.configuration.injection.MockInjectionStrategy.process(MockInjectionStrategy.java:71)
+	at org.mockito.internal.configuration.injection.MockInjection$OngoingMockInjection.apply(MockInjection.java:88)
+	at org.mockito.internal.configuration.DefaultInjectionEngine.injectMocksOnFields(DefaultInjectionEngine.java:26)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.injectCloseableMocks(InjectingAnnotationEngine.java:119)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.processInjectMocks(InjectingAnnotationEngine.java:62)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.process(InjectingAnnotationEngine.java:49)
+	at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:82)
+	... 45 more
+
+
+
+Cannot instantiate @InjectMocks field named 'gpsSimpleViewFragment' of type 'class com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment'.
+You haven't provided the instance at field declaration so I tried to construct the instance.
+However the constructor or the initialization block threw an exception : Cannot invoke "com.mendhak.gpslogger.common.AppSettings.getApplicationContext()" because the return value of "com.mendhak.gpslogger.common.AppSettings.getInstance()" is null
+
+org.mockito.exceptions.misusing.InjectMocksException:
+Cannot instantiate @InjectMocks field named 'gpsSimpleViewFragment' of type 'class com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment'.
+You haven't provided the instance at field declaration so I tried to construct the instance.
+However the constructor or the initialization block threw an exception : Cannot invoke "com.mendhak.gpslogger.common.AppSettings.getApplicationContext()" because the return value of "com.mendhak.gpslogger.common.AppSettings.getInstance()" is null
+
+	at app//com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.setUp(GpsSimpleViewFragmentTest.java:108)
+	at java.base@17.0.11/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base@17.0.11/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base@17.0.11/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base@17.0.11/java.lang.reflect.Method.invoke(Method.java:568)
+	at app//org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at app//org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at app//org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at app//org.junit.internal.runners.statements.RunBefores.invokeMethod(RunBefores.java:33)
+	at app//org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:24)
+	at app//org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at app//org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at app//org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at app//org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at app//org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at app//org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at app//org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at app//org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at app//org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at app//org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at app//org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at app//org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base@17.0.11/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base@17.0.11/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base@17.0.11/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base@17.0.11/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at app//worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at app//worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+Caused by: java.lang.NullPointerException: Cannot invoke "com.mendhak.gpslogger.common.AppSettings.getApplicationContext()" because the return value of "com.mendhak.gpslogger.common.AppSettings.getInstance()" is null
+	at com.mendhak.gpslogger.common.Session.getInstance(Session.java:46)
+	at com.mendhak.gpslogger.ui.fragments.display.GenericViewFragment.<init>(GenericViewFragment.java:59)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.<init>(GpsSimpleViewFragment.java:62)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480)
+	at org.mockito.internal.util.reflection.ReflectionMemberAccessor.lambda$newInstance$0(ReflectionMemberAccessor.java:29)
+	at org.mockito.internal.util.reflection.ReflectionMemberAccessor.newInstance(ReflectionMemberAccessor.java:29)
+	at org.mockito.internal.util.reflection.ReflectionMemberAccessor.newInstance(ReflectionMemberAccessor.java:20)
+	at org.mockito.internal.util.reflection.FieldInitializer$NoArgConstructorInstantiator.instantiate(FieldInitializer.java:203)
+	at org.mockito.internal.util.reflection.FieldInitializer.acquireFieldInstance(FieldInitializer.java:146)
+	at org.mockito.internal.util.reflection.FieldInitializer.initialize(FieldInitializer.java:91)
+	at org.mockito.internal.configuration.injection.PropertyAndSetterInjection.initializeInjectMocksField(PropertyAndSetterInjection.java:101)
+	at org.mockito.internal.configuration.injection.PropertyAndSetterInjection.processInjection(PropertyAndSetterInjection.java:82)
+	at org.mockito.internal.configuration.injection.MockInjectionStrategy.process(MockInjectionStrategy.java:68)
+	at org.mockito.internal.configuration.injection.MockInjectionStrategy.relayProcessToNextStrategy(MockInjectionStrategy.java:91)
+	at org.mockito.internal.configuration.injection.MockInjectionStrategy.process(MockInjectionStrategy.java:71)
+	at org.mockito.internal.configuration.injection.MockInjectionStrategy.relayProcessToNextStrategy(MockInjectionStrategy.java:91)
+	at org.mockito.internal.configuration.injection.MockInjectionStrategy.process(MockInjectionStrategy.java:71)
+	at org.mockito.internal.configuration.injection.MockInjection$OngoingMockInjection.apply(MockInjection.java:88)
+	at org.mockito.internal.configuration.DefaultInjectionEngine.injectMocksOnFields(DefaultInjectionEngine.java:26)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.injectCloseableMocks(InjectingAnnotationEngine.java:119)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.processInjectMocks(InjectingAnnotationEngine.java:62)
+	at org.mockito.internal.configuration.InjectingAnnotationEngine.process(InjectingAnnotationEngine.java:49)
+	at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:82)
+	... 45 more
+
+
+Fragment GpsSimpleViewFragment{3699c795} (57365531-31ae-4fd1-b0b2-071d1bcebef3) not attached to a context.
+java.lang.IllegalStateException: Fragment GpsSimpleViewFragment{3699c795} (57365531-31ae-4fd1-b0b2-071d1bcebef3) not attached to a context.
+	at androidx.fragment.app.Fragment.requireContext(Fragment.java:972)
+	at androidx.fragment.app.Fragment.getDefaultViewModelCreationExtras(Fragment.java:483)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetDefaultViewModelCreationExtras(GpsSimpleViewFragmentTest.java:485)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+Expected :true
+Actual   :false
+
+<Click to see difference>
+
+
+java.lang.AssertionError: expected:<true> but was:<false>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testIsInLayout(GpsSimpleViewFragmentTest.java:699)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+Cannot invoke "android.view.LayoutInflater.setFactory2(android.view.LayoutInflater$Factory2)" because "inflater" is null
+java.lang.NullPointerException: Cannot invoke "android.view.LayoutInflater.setFactory2(android.view.LayoutInflater$Factory2)" because "inflater" is null
+	at androidx.core.view.LayoutInflaterCompat.setFactory2(LayoutInflaterCompat.java:141)
+	at androidx.fragment.app.Fragment.getLayoutInflater(Fragment.java:1777)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetLayoutInflater2(GpsSimpleViewFragmentTest.java:835)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+Expected :true
+Actual   :false
+
+<Click to see difference>
+
+
+java.lang.AssertionError: expected:<true> but was:<false>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testIsRemoving(GpsSimpleViewFragmentTest.java:693)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+Cannot invoke "androidx.lifecycle.Lifecycle$State.ordinal()" because "this.mMaxState" is null
+java.lang.NullPointerException: Cannot invoke "androidx.lifecycle.Lifecycle$State.ordinal()" because "this.mMaxState" is null
+	at androidx.fragment.app.Fragment.getMinimumMaxLifecycleState(Fragment.java:436)
+	at androidx.fragment.app.Fragment.getMinimumMaxLifecycleState(Fragment.java:438)
+	at androidx.fragment.app.Fragment.getViewModelStore(Fragment.java:425)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetViewModelStore(GpsSimpleViewFragmentTest.java:473)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+Expected :Fragment{2e6066e1} (e6d7679d-3d52-4fe0-aedf-87e2888d44e8)
+Actual   :mParentFragment
+
+<Click to see difference>
+
+
+java.lang.AssertionError: expected:<Fragment{2e6066e1} (e6d7679d-3d52-4fe0-aedf-87e2888d44e8)> but was:<mParentFragment>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testRequireParentFragment(GpsSimpleViewFragmentTest.java:675)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+Expected :Fragment{5d9b79a2} (9da01d8b-49fa-47d9-b725-4090eeb8d32e)
+Actual   :mParentFragment
+
+<Click to see difference>
+
+
+java.lang.AssertionError: expected:<Fragment{5d9b79a2} (9da01d8b-49fa-47d9-b725-4090eeb8d32e)> but was:<mParentFragment>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetParentFragment(GpsSimpleViewFragmentTest.java:669)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+Cannot invoke "androidx.fragment.app.FragmentHostCallback.getHandler()" because the return value of "androidx.fragment.app.FragmentManager.getHost()" is null
+java.lang.NullPointerException: Cannot invoke "androidx.fragment.app.FragmentHostCallback.getHandler()" because the return value of "androidx.fragment.app.FragmentManager.getHost()" is null
+	at androidx.fragment.app.Fragment.postponeEnterTransition(Fragment.java:2862)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testPostponeEnterTransition2(GpsSimpleViewFragmentTest.java:1105)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+Expected :true
+Actual   :false
+
+<Click to see difference>
+
+
+java.lang.AssertionError: expected:<true> but was:<false>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testIsMenuVisible(GpsSimpleViewFragmentTest.java:729)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+
+when() requires an argument which has to be 'a method call on a mock'.
+For example:
+    when(mock.getArticles()).thenReturn(articles);
+
+Also, this error might show up because:
+1. you stub either of: final/private/equals()/hashCode() methods.
+   Those methods *cannot* be stubbed/verified.
+   Mocking methods declared on non-public parent classes is not supported.
+2. inside when() you don't call method on mock but on some other object.
+
+org.mockito.exceptions.misusing.MissingMethodInvocationException:
+when() requires an argument which has to be 'a method call on a mock'.
+For example:
+    when(mock.getArticles()).thenReturn(articles);
+
+Also, this error might show up because:
+1. you stub either of: final/private/equals()/hashCode() methods.
+   Those methods *cannot* be stubbed/verified.
+   Mocking methods declared on non-public parent classes is not supported.
+2. inside when() you don't call method on mock but on some other object.
+
+	at app//com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnClick(GpsSimpleViewFragmentTest.java:403)
+	at java.base@17.0.11/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base@17.0.11/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base@17.0.11/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base@17.0.11/java.lang.reflect.Method.invoke(Method.java:568)
+	at app//org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at app//org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at app//org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at app//org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at app//org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at app//org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at app//org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at app//org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at app//org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at app//org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at app//org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at app//org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at app//org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at app//org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at app//org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at app//org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at app//org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base@17.0.11/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base@17.0.11/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base@17.0.11/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base@17.0.11/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at app//worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at app//worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+
+Wanted but not invoked:
+mTarget.onPause();
+-> at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnPause(GpsSimpleViewFragmentTest.java:217)
+Actually, there were zero interactions with this mock.
+
+Wanted but not invoked:
+mTarget.onPause();
+-> at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnPause(GpsSimpleViewFragmentTest.java:217)
+Actually, there were zero interactions with this mock.
+
+	at app//com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnPause(GpsSimpleViewFragmentTest.java:217)
+	at java.base@17.0.11/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base@17.0.11/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base@17.0.11/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base@17.0.11/java.lang.reflect.Method.invoke(Method.java:568)
+	at app//org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at app//org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at app//org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at app//org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at app//org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at app//org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at app//org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at app//org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at app//org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at app//org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at app//org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at app//org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at app//org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at app//org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at app//org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at app//org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at app//org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base@17.0.11/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base@17.0.11/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base@17.0.11/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base@17.0.11/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at app//worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at app//worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+Cannot invoke "android.content.res.Resources.getColor(int)" because the return value of "android.content.Context.getResources()" is null
+java.lang.NullPointerException: Cannot invoke "android.content.res.Resources.getColor(int)" because the return value of "android.content.Context.getResources()" is null
+	at androidx.core.content.ContextCompat.getColor(ContextCompat.java:580)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.setActionButtonStop(GpsSimpleViewFragment.java:125)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.onStart(GpsSimpleViewFragment.java:268)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnStart(GpsSimpleViewFragmentTest.java:168)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+Expected :true
+Actual   :false
+
+<Click to see difference>
+
+
+java.lang.AssertionError: expected:<true> but was:<false>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testHasOptionsMenu(GpsSimpleViewFragmentTest.java:723)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+Cannot invoke "androidx.lifecycle.Lifecycle$State.ordinal()" because "this.mMaxState" is null
+java.lang.NullPointerException: Cannot invoke "androidx.lifecycle.Lifecycle$State.ordinal()" because "this.mMaxState" is null
+	at androidx.fragment.app.Fragment.getMinimumMaxLifecycleState(Fragment.java:436)
+	at androidx.fragment.app.Fragment.getMinimumMaxLifecycleState(Fragment.java:438)
+	at androidx.fragment.app.Fragment.getViewModelStore(Fragment.java:425)
+	at androidx.loader.app.LoaderManager.getInstance(LoaderManager.java:128)
+	at androidx.fragment.app.Fragment.getLoaderManager(Fragment.java:1428)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetLoaderManager(GpsSimpleViewFragmentTest.java:771)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+Expected :true
+Actual   :false
+
+<Click to see difference>
+
+
+java.lang.AssertionError: expected:<true> but was:<false>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testShouldShowRequestPermissionRationale(GpsSimpleViewFragmentTest.java:818)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+Fragment GpsSimpleViewFragment{3ee39a1c} (fe3af90c-d7b0-4951-82c1-3e45b9c89c66) not attached to a context.
+java.lang.IllegalStateException: Fragment GpsSimpleViewFragment{3ee39a1c} (fe3af90c-d7b0-4951-82c1-3e45b9c89c66) not attached to a context.
+	at androidx.fragment.app.Fragment.requireContext(Fragment.java:972)
+	at androidx.fragment.app.Fragment.getResources(Fragment.java:1036)
+	at androidx.fragment.app.Fragment.getString(Fragment.java:1071)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetString2(GpsSimpleViewFragmentTest.java:638)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+Expected :Fragment{291fbdc9} (471a09be-715a-4af5-8c3a-5fec0719c81d)
+Actual   :mTarget
+
+<Click to see difference>
+
+
+java.lang.AssertionError: expected:<Fragment{291fbdc9} (471a09be-715a-4af5-8c3a-5fec0719c81d)> but was:<mTarget>
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at org.junit.Assert.assertEquals(Assert.java:146)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetTargetFragment(GpsSimpleViewFragmentTest.java:573)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+Fragment GpsSimpleViewFragment{f500481} (7dcc9aaa-53ff-47e3-8c14-95ff4ebe718a) not attached to a context.
+java.lang.IllegalStateException: Fragment GpsSimpleViewFragment{f500481} (7dcc9aaa-53ff-47e3-8c14-95ff4ebe718a) not attached to a context.
+	at androidx.fragment.app.Fragment.requireContext(Fragment.java:972)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testRequireContext(GpsSimpleViewFragmentTest.java:590)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+Cannot invoke "android.widget.ImageView.clearColorFilter()" because "imgView" is null
+java.lang.NullPointerException: Cannot invoke "android.widget.ImageView.clearColorFilter()" because "imgView" is null
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.setColor(GpsSimpleViewFragment.java:212)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.setSatelliteCount(GpsSimpleViewFragment.java:459)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.onEventMainThread(GpsSimpleViewFragment.java:299)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnEventMainThread2(GpsSimpleViewFragmentTest.java:261)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+Cannot invoke "android.content.res.Resources.getColor(int)" because the return value of "android.content.Context.getResources()" is null
+java.lang.NullPointerException: Cannot invoke "android.content.res.Resources.getColor(int)" because the return value of "android.content.Context.getResources()" is null
+	at androidx.core.content.ContextCompat.getColor(ContextCompat.java:580)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.setActionButtonStop(GpsSimpleViewFragment.java:125)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.onWaitingForLocation(GpsSimpleViewFragment.java:486)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.onEventMainThread(GpsSimpleViewFragment.java:304)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnEventMainThread3(GpsSimpleViewFragmentTest.java:273)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+Cannot invoke "android.content.SharedPreferences.getString(String, String)" because "this.prefs" is null
+java.lang.NullPointerException: Cannot invoke "android.content.SharedPreferences.getString(String, String)" because "this.prefs" is null
+	at com.mendhak.gpslogger.common.Session.get(Session.java:53)
+	at com.mendhak.gpslogger.common.Session.getCurrentFileName(Session.java:150)
+	at com.mendhak.gpslogger.common.Strings.getFormattedFileName(Strings.java:304)
+	at com.mendhak.gpslogger.common.Strings.getFormattedFileName(Strings.java:300)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.showPreferencesSummary(GpsSimpleViewFragment.java:130)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.onEventMainThread(GpsSimpleViewFragment.java:311)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnEventMainThread4(GpsSimpleViewFragmentTest.java:296)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+
+Cannot invoke "android.widget.TextView.setVisibility(int)" because "txtFilename" is null
+java.lang.NullPointerException: Cannot invoke "android.widget.TextView.setVisibility(int)" because "txtFilename" is null
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.showCurrentFileName(GpsSimpleViewFragment.java:188)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.onEventMainThread(GpsSimpleViewFragment.java:323)
+	at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnEventMainThread5(GpsSimpleViewFragmentTest.java:323)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:58)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:40)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:60)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at jdk.proxy1/jdk.proxy1.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testOnActivityCreated FAILED
+    org.mockito.exceptions.misusing.InjectMocksException:
+    Cannot instantiate @InjectMocks field named 'gpsSimpleViewFragment' of type 'class com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment'.
+    You haven't provided the instance at field declaration so I tried to construct the instance.
+    However the constructor or the initialization block threw an exception : Cannot invoke "com.mendhak.gpslogger.common.AppSettings.getApplicationContext()" because the return value of "com.mendhak.gpslogger.common.AppSettings.getInstance()" is null
+        at app//com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.setUp(GpsSimpleViewFragmentTest.java:108)
+        Caused by:
+        java.lang.NullPointerException: Cannot invoke "com.mendhak.gpslogger.common.AppSettings.getApplicationContext()" because the return value of "com.mendhak.gpslogger.common.AppSettings.getInstance()" is null
+            at com.mendhak.gpslogger.common.PreferenceHelper.getInstance(PreferenceHelper.java:52)
+            at com.mendhak.gpslogger.ui.fragments.display.GenericViewFragment.<init>(GenericViewFragment.java:58)
+            at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.<init>(GpsSimpleViewFragment.java:62)
+            at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+            at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+            at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+            at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+            at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480)
+            at org.mockito.internal.util.reflection.ReflectionMemberAccessor.lambda$newInstance$0(ReflectionMemberAccessor.java:29)
+            at org.mockito.internal.util.reflection.ReflectionMemberAccessor.newInstance(ReflectionMemberAccessor.java:29)
+            at org.mockito.internal.util.reflection.ReflectionMemberAccessor.newInstance(ReflectionMemberAccessor.java:20)
+            at org.mockito.internal.util.reflection.FieldInitializer$NoArgConstructorInstantiator.instantiate(FieldInitializer.java:203)
+            at org.mockito.internal.util.reflection.FieldInitializer.acquireFieldInstance(FieldInitializer.java:146)
+            at org.mockito.internal.util.reflection.FieldInitializer.initialize(FieldInitializer.java:91)
+            at org.mockito.internal.configuration.injection.PropertyAndSetterInjection.initializeInjectMocksField(PropertyAndSetterInjection.java:101)
+            at org.mockito.internal.configuration.injection.PropertyAndSetterInjection.processInjection(PropertyAndSetterInjection.java:82)
+            at org.mockito.internal.configuration.injection.MockInjectionStrategy.process(MockInjectionStrategy.java:68)
+            at org.mockito.internal.configuration.injection.MockInjectionStrategy.relayProcessToNextStrategy(MockInjectionStrategy.java:91)
+            at org.mockito.internal.configuration.injection.MockInjectionStrategy.process(MockInjectionStrategy.java:71)
+            at org.mockito.internal.configuration.injection.MockInjectionStrategy.relayProcessToNextStrategy(MockInjectionStrategy.java:91)
+            at org.mockito.internal.configuration.injection.MockInjectionStrategy.process(MockInjectionStrategy.java:71)
+            at org.mockito.internal.configuration.injection.MockInjection$OngoingMockInjection.apply(MockInjection.java:88)
+            at org.mockito.internal.configuration.DefaultInjectionEngine.injectMocksOnFields(DefaultInjectionEngine.java:26)
+            at org.mockito.internal.configuration.InjectingAnnotationEngine.injectCloseableMocks(InjectingAnnotationEngine.java:119)
+            at org.mockito.internal.configuration.InjectingAnnotationEngine.processInjectMocks(InjectingAnnotationEngine.java:62)
+            at org.mockito.internal.configuration.InjectingAnnotationEngine.process(InjectingAnnotationEngine.java:49)
+            at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:82)
+            ... 1 more
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testOnResume FAILED
+    org.mockito.exceptions.misusing.InjectMocksException:
+    Cannot instantiate @InjectMocks field named 'gpsSimpleViewFragment' of type 'class com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment'.
+    You haven't provided the instance at field declaration so I tried to construct the instance.
+    However the constructor or the initialization block threw an exception : Cannot invoke "com.mendhak.gpslogger.common.AppSettings.getApplicationContext()" because the return value of "com.mendhak.gpslogger.common.AppSettings.getInstance()" is null
+        at app//com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.setUp(GpsSimpleViewFragmentTest.java:108)
+        Caused by:
+        java.lang.NullPointerException: Cannot invoke "com.mendhak.gpslogger.common.AppSettings.getApplicationContext()" because the return value of "com.mendhak.gpslogger.common.AppSettings.getInstance()" is null
+            at com.mendhak.gpslogger.common.Session.getInstance(Session.java:46)
+            at com.mendhak.gpslogger.ui.fragments.display.GenericViewFragment.<init>(GenericViewFragment.java:59)
+            at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.<init>(GpsSimpleViewFragment.java:62)
+            at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+            at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+            at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+            at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+            at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480)
+            at org.mockito.internal.util.reflection.ReflectionMemberAccessor.lambda$newInstance$0(ReflectionMemberAccessor.java:29)
+            at org.mockito.internal.util.reflection.ReflectionMemberAccessor.newInstance(ReflectionMemberAccessor.java:29)
+            at org.mockito.internal.util.reflection.ReflectionMemberAccessor.newInstance(ReflectionMemberAccessor.java:20)
+            at org.mockito.internal.util.reflection.FieldInitializer$NoArgConstructorInstantiator.instantiate(FieldInitializer.java:203)
+            at org.mockito.internal.util.reflection.FieldInitializer.acquireFieldInstance(FieldInitializer.java:146)
+            at org.mockito.internal.util.reflection.FieldInitializer.initialize(FieldInitializer.java:91)
+            at org.mockito.internal.configuration.injection.PropertyAndSetterInjection.initializeInjectMocksField(PropertyAndSetterInjection.java:101)
+            at org.mockito.internal.configuration.injection.PropertyAndSetterInjection.processInjection(PropertyAndSetterInjection.java:82)
+            at org.mockito.internal.configuration.injection.MockInjectionStrategy.process(MockInjectionStrategy.java:68)
+            at org.mockito.internal.configuration.injection.MockInjectionStrategy.relayProcessToNextStrategy(MockInjectionStrategy.java:91)
+            at org.mockito.internal.configuration.injection.MockInjectionStrategy.process(MockInjectionStrategy.java:71)
+            at org.mockito.internal.configuration.injection.MockInjectionStrategy.relayProcessToNextStrategy(MockInjectionStrategy.java:91)
+            at org.mockito.internal.configuration.injection.MockInjectionStrategy.process(MockInjectionStrategy.java:71)
+            at org.mockito.internal.configuration.injection.MockInjection$OngoingMockInjection.apply(MockInjection.java:88)
+            at org.mockito.internal.configuration.DefaultInjectionEngine.injectMocksOnFields(DefaultInjectionEngine.java:26)
+            at org.mockito.internal.configuration.InjectingAnnotationEngine.injectCloseableMocks(InjectingAnnotationEngine.java:119)
+            at org.mockito.internal.configuration.InjectingAnnotationEngine.processInjectMocks(InjectingAnnotationEngine.java:62)
+            at org.mockito.internal.configuration.InjectingAnnotationEngine.process(InjectingAnnotationEngine.java:49)
+            at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:82)
+            ... 1 more
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetDefaultViewModelCreationExtras FAILED
+    java.lang.IllegalStateException: Fragment GpsSimpleViewFragment{3699c795} (57365531-31ae-4fd1-b0b2-071d1bcebef3) not attached to a context.
+        at androidx.fragment.app.Fragment.requireContext(Fragment.java:972)
+        at androidx.fragment.app.Fragment.getDefaultViewModelCreationExtras(Fragment.java:483)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetDefaultViewModelCreationExtras(GpsSimpleViewFragmentTest.java:485)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testIsInLayout FAILED
+    java.lang.AssertionError: expected:<true> but was:<false>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testIsInLayout(GpsSimpleViewFragmentTest.java:699)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetLayoutInflater2 FAILED
+    java.lang.NullPointerException: Cannot invoke "android.view.LayoutInflater.setFactory2(android.view.LayoutInflater$Factory2)" because "inflater" is null
+        at androidx.core.view.LayoutInflaterCompat.setFactory2(LayoutInflaterCompat.java:141)
+        at androidx.fragment.app.Fragment.getLayoutInflater(Fragment.java:1777)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetLayoutInflater2(GpsSimpleViewFragmentTest.java:835)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testIsRemoving FAILED
+    java.lang.AssertionError: expected:<true> but was:<false>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testIsRemoving(GpsSimpleViewFragmentTest.java:693)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetViewModelStore FAILED
+    java.lang.NullPointerException: Cannot invoke "androidx.lifecycle.Lifecycle$State.ordinal()" because "this.mMaxState" is null
+        at androidx.fragment.app.Fragment.getMinimumMaxLifecycleState(Fragment.java:436)
+        at androidx.fragment.app.Fragment.getMinimumMaxLifecycleState(Fragment.java:438)
+        at androidx.fragment.app.Fragment.getViewModelStore(Fragment.java:425)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetViewModelStore(GpsSimpleViewFragmentTest.java:473)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testRequireParentFragment FAILED
+    java.lang.AssertionError: expected:<Fragment{2e6066e1} (e6d7679d-3d52-4fe0-aedf-87e2888d44e8)> but was:<mParentFragment>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testRequireParentFragment(GpsSimpleViewFragmentTest.java:675)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetParentFragment FAILED
+    java.lang.AssertionError: expected:<Fragment{5d9b79a2} (9da01d8b-49fa-47d9-b725-4090eeb8d32e)> but was:<mParentFragment>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetParentFragment(GpsSimpleViewFragmentTest.java:669)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testPostponeEnterTransition2 FAILED
+    java.lang.NullPointerException: Cannot invoke "androidx.fragment.app.FragmentHostCallback.getHandler()" because the return value of "androidx.fragment.app.FragmentManager.getHost()" is null
+        at androidx.fragment.app.Fragment.postponeEnterTransition(Fragment.java:2862)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testPostponeEnterTransition2(GpsSimpleViewFragmentTest.java:1105)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testIsMenuVisible FAILED
+    java.lang.AssertionError: expected:<true> but was:<false>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testIsMenuVisible(GpsSimpleViewFragmentTest.java:729)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testOnClick FAILED
+    org.mockito.exceptions.misusing.MissingMethodInvocationException:
+    when() requires an argument which has to be 'a method call on a mock'.
+    For example:
+        when(mock.getArticles()).thenReturn(articles);
+    Also, this error might show up because:
+    1. you stub either of: final/private/equals()/hashCode() methods.
+       Those methods *cannot* be stubbed/verified.
+       Mocking methods declared on non-public parent classes is not supported.
+    2. inside when() you don't call method on mock but on some other object.
+        at app//com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnClick(GpsSimpleViewFragmentTest.java:403)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testOnPause FAILED
+    Wanted but not invoked:
+    mTarget.onPause();
+    -> at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnPause(GpsSimpleViewFragmentTest.java:217)
+    Actually, there were zero interactions with this mock.
+        at app//com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnPause(GpsSimpleViewFragmentTest.java:217)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testOnStart FAILED
+    java.lang.NullPointerException: Cannot invoke "android.content.res.Resources.getColor(int)" because the return value of "android.content.Context.getResources()" is null
+        at androidx.core.content.ContextCompat.getColor(ContextCompat.java:580)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.setActionButtonStop(GpsSimpleViewFragment.java:125)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.onStart(GpsSimpleViewFragment.java:268)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnStart(GpsSimpleViewFragmentTest.java:168)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testHasOptionsMenu FAILED
+    java.lang.AssertionError: expected:<true> but was:<false>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testHasOptionsMenu(GpsSimpleViewFragmentTest.java:723)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetLoaderManager FAILED
+    java.lang.NullPointerException: Cannot invoke "androidx.lifecycle.Lifecycle$State.ordinal()" because "this.mMaxState" is null
+        at androidx.fragment.app.Fragment.getMinimumMaxLifecycleState(Fragment.java:436)
+        at androidx.fragment.app.Fragment.getMinimumMaxLifecycleState(Fragment.java:438)
+        at androidx.fragment.app.Fragment.getViewModelStore(Fragment.java:425)
+        at androidx.loader.app.LoaderManager.getInstance(LoaderManager.java:128)
+        at androidx.fragment.app.Fragment.getLoaderManager(Fragment.java:1428)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetLoaderManager(GpsSimpleViewFragmentTest.java:771)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testShouldShowRequestPermissionRationale FAILED
+    java.lang.AssertionError: expected:<true> but was:<false>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testShouldShowRequestPermissionRationale(GpsSimpleViewFragmentTest.java:818)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetString2 FAILED
+    java.lang.IllegalStateException: Fragment GpsSimpleViewFragment{3ee39a1c} (fe3af90c-d7b0-4951-82c1-3e45b9c89c66) not attached to a context.
+        at androidx.fragment.app.Fragment.requireContext(Fragment.java:972)
+        at androidx.fragment.app.Fragment.getResources(Fragment.java:1036)
+        at androidx.fragment.app.Fragment.getString(Fragment.java:1071)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetString2(GpsSimpleViewFragmentTest.java:638)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetTargetFragment FAILED
+    java.lang.AssertionError: expected:<Fragment{291fbdc9} (471a09be-715a-4af5-8c3a-5fec0719c81d)> but was:<mTarget>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetTargetFragment(GpsSimpleViewFragmentTest.java:573)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testRequireContext FAILED
+    java.lang.IllegalStateException: Fragment GpsSimpleViewFragment{f500481} (7dcc9aaa-53ff-47e3-8c14-95ff4ebe718a) not attached to a context.
+        at androidx.fragment.app.Fragment.requireContext(Fragment.java:972)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testRequireContext(GpsSimpleViewFragmentTest.java:590)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testOnEventMainThread2 FAILED
+    java.lang.NullPointerException: Cannot invoke "android.widget.ImageView.clearColorFilter()" because "imgView" is null
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.setColor(GpsSimpleViewFragment.java:212)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.setSatelliteCount(GpsSimpleViewFragment.java:459)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.onEventMainThread(GpsSimpleViewFragment.java:299)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnEventMainThread2(GpsSimpleViewFragmentTest.java:261)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testOnEventMainThread3 FAILED
+    java.lang.NullPointerException: Cannot invoke "android.content.res.Resources.getColor(int)" because the return value of "android.content.Context.getResources()" is null
+        at androidx.core.content.ContextCompat.getColor(ContextCompat.java:580)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.setActionButtonStop(GpsSimpleViewFragment.java:125)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.onWaitingForLocation(GpsSimpleViewFragment.java:486)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.onEventMainThread(GpsSimpleViewFragment.java:304)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnEventMainThread3(GpsSimpleViewFragmentTest.java:273)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testOnEventMainThread4 FAILED
+    java.lang.NullPointerException: Cannot invoke "android.content.SharedPreferences.getString(String, String)" because "this.prefs" is null
+        at com.mendhak.gpslogger.common.Session.get(Session.java:53)
+        at com.mendhak.gpslogger.common.Session.getCurrentFileName(Session.java:150)
+        at com.mendhak.gpslogger.common.Strings.getFormattedFileName(Strings.java:304)
+        at com.mendhak.gpslogger.common.Strings.getFormattedFileName(Strings.java:300)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.showPreferencesSummary(GpsSimpleViewFragment.java:130)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.onEventMainThread(GpsSimpleViewFragment.java:311)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnEventMainThread4(GpsSimpleViewFragmentTest.java:296)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testOnEventMainThread5 FAILED
+    java.lang.NullPointerException: Cannot invoke "android.widget.TextView.setVisibility(int)" because "txtFilename" is null
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.showCurrentFileName(GpsSimpleViewFragment.java:188)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.onEventMainThread(GpsSimpleViewFragment.java:323)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnEventMainThread5(GpsSimpleViewFragmentTest.java:323)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testIsStateSaved FAILED
+    java.lang.AssertionError: expected:<true> but was:<false>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testIsStateSaved(GpsSimpleViewFragmentTest.java:557)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testDump FAILED
+    java.lang.NullPointerException: Cannot invoke "java.io.PrintWriter.print(String)" because "writer" is null
+        at androidx.fragment.app.Fragment.dump(Fragment.java:2948)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testDump(GpsSimpleViewFragmentTest.java:1115)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testDisplayLocationInfo FAILED
+    org.mockito.exceptions.misusing.MissingMethodInvocationException:
+    when() requires an argument which has to be 'a method call on a mock'.
+    For example:
+        when(mock.getArticles()).thenReturn(articles);
+    Also, this error might show up because:
+    1. you stub either of: final/private/equals()/hashCode() methods.
+       Those methods *cannot* be stubbed/verified.
+       Mocking methods declared on non-public parent classes is not supported.
+    2. inside when() you don't call method on mock but on some other object.
+        at app//com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testDisplayLocationInfo(GpsSimpleViewFragmentTest.java:346)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testToString FAILED
+    org.junit.ComparisonFailure: expected:<[replaceMeWithExpectedResult]> but was:<[GpsSimpleViewFragment{6b5df313} (5602f8e5-2468-4b81-ad92-ed9abadbffb6)]>
+        at org.junit.Assert.assertEquals(Assert.java:117)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testToString(GpsSimpleViewFragmentTest.java:522)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetArguments FAILED
+    java.lang.AssertionError: expected:<null> but was:<null>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetArguments(GpsSimpleViewFragmentTest.java:545)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetResources FAILED
+    java.lang.IllegalStateException: Fragment GpsSimpleViewFragment{14426256} (c15a9c22-dc06-47d4-8d8b-835251bf0d07) not attached to a context.
+        at androidx.fragment.app.Fragment.requireContext(Fragment.java:972)
+        at androidx.fragment.app.Fragment.getResources(Fragment.java:1036)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetResources(GpsSimpleViewFragmentTest.java:620)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetSharedElementEnterTransition FAILED
+    java.lang.AssertionError: expected:<replaceMeWithExpectedResult> but was:<null>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetSharedElementEnterTransition(GpsSimpleViewFragmentTest.java:1062)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testOnContextItemSelected FAILED
+    java.lang.AssertionError: expected:<true> but was:<false>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnContextItemSelected(GpsSimpleViewFragmentTest.java:997)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testOnDestroy FAILED
+    Wanted but not invoked:
+    mTarget.onDestroy();
+    -> at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnDestroy(GpsSimpleViewFragmentTest.java:420)
+    Actually, there were zero interactions with this mock.
+        at app//com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnDestroy(GpsSimpleViewFragmentTest.java:420)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testOnGetLayoutInflater FAILED
+    java.lang.NullPointerException: Cannot invoke "android.view.LayoutInflater.setFactory2(android.view.LayoutInflater$Factory2)" because "inflater" is null
+        at androidx.core.view.LayoutInflaterCompat.setFactory2(LayoutInflaterCompat.java:141)
+        at androidx.fragment.app.Fragment.getLayoutInflater(Fragment.java:1777)
+        at androidx.fragment.app.Fragment.onGetLayoutInflater(Fragment.java:1723)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnGetLayoutInflater(GpsSimpleViewFragmentTest.java:823)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testRequireActivity FAILED
+    java.lang.IllegalStateException: Fragment GpsSimpleViewFragment{5d95c7c2} (97731089-3072-458e-b3ee-afb1731d4189) not attached to an activity.
+        at androidx.fragment.app.Fragment.requireActivity(Fragment.java:1000)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testRequireActivity(GpsSimpleViewFragmentTest.java:602)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetReenterTransition FAILED
+    java.lang.AssertionError: expected:<replaceMeWithExpectedResult> but was:<null>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetReenterTransition(GpsSimpleViewFragmentTest.java:1051)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetHost FAILED
+    java.lang.AssertionError: expected:<replaceMeWithExpectedResult> but was:<null>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetHost(GpsSimpleViewFragmentTest.java:609)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetText FAILED
+    java.lang.IllegalStateException: Fragment GpsSimpleViewFragment{2c8c897e} (ee174a3a-2953-495d-b94f-156232a04090) not attached to a context.
+        at androidx.fragment.app.Fragment.requireContext(Fragment.java:972)
+        at androidx.fragment.app.Fragment.getResources(Fragment.java:1036)
+        at androidx.fragment.app.Fragment.getText(Fragment.java:1047)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetText(GpsSimpleViewFragmentTest.java:626)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetView FAILED
+    java.lang.AssertionError: expected:<null> but was:<mView>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetView(GpsSimpleViewFragmentTest.java:884)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testIsDetached FAILED
+    java.lang.AssertionError: expected:<true> but was:<false>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testIsDetached(GpsSimpleViewFragmentTest.java:687)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetSavedStateRegistry FAILED
+    java.lang.AssertionError: expected:<androidx.savedstate.SavedStateRegistry@6f6d2847> but was:<androidx.savedstate.SavedStateRegistry@7fc8930f>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetSavedStateRegistry(GpsSimpleViewFragmentTest.java:492)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testRequireHost FAILED
+    java.lang.IllegalStateException: Fragment GpsSimpleViewFragment{735d1db7} (923834d2-19a5-442c-9392-609e591e7a83) not attached to a host.
+        at androidx.fragment.app.Fragment.requireHost(Fragment.java:1026)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testRequireHost(GpsSimpleViewFragmentTest.java:614)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testRequireView FAILED
+    java.lang.AssertionError: expected:<null> but was:<mView>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testRequireView(GpsSimpleViewFragmentTest.java:890)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetActivity FAILED
+    java.lang.NullPointerException: Cannot invoke "android.os.Looper.getThread()" because the return value of "android.os.Looper.getMainLooper()" is null
+        at androidx.arch.core.executor.DefaultTaskExecutor.isMainThread(DefaultTaskExecutor.java:78)
+        at androidx.arch.core.executor.ArchTaskExecutor.isMainThread(ArchTaskExecutor.java:108)
+        at androidx.lifecycle.LifecycleRegistry.enforceMainThreadIfNeeded(LifecycleRegistry.kt:296)
+        at androidx.lifecycle.LifecycleRegistry.addObserver(LifecycleRegistry.kt:174)
+        at androidx.activity.ComponentActivity.<init>(ComponentActivity.java:287)
+        at androidx.activity.ComponentActivity.<init>(ComponentActivity.java:343)
+        at androidx.fragment.app.FragmentActivity.<init>(FragmentActivity.java:123)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetActivity(GpsSimpleViewFragmentTest.java:597)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetReturnTransition FAILED
+    java.lang.AssertionError: expected:<replaceMeWithExpectedResult> but was:<null>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetReturnTransition(GpsSimpleViewFragmentTest.java:1029)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetViewLifecycleOwner FAILED
+    java.lang.IllegalStateException: Can't access the Fragment View's LifecycleOwner for GpsSimpleViewFragment{61d8a98b} (34949f88-3721-4718-add1-302abc5776f1) when getView() is null i.e., before onCreateView() or after onDestroyView()
+        at androidx.fragment.app.Fragment.getViewLifecycleOwner(Fragment.java:385)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetViewLifecycleOwner(GpsSimpleViewFragmentTest.java:461)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetExitTransition FAILED
+    java.lang.AssertionError: expected:<replaceMeWithExpectedResult> but was:<null>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetExitTransition(GpsSimpleViewFragmentTest.java:1040)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetDefaultViewModelProviderFactory FAILED
+    java.lang.AssertionError: expected:<null> but was:<mDefaultFactory>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetDefaultViewModelProviderFactory(GpsSimpleViewFragmentTest.java:480)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetRetainInstance FAILED
+    java.lang.AssertionError: expected:<true> but was:<false>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetRetainInstance(GpsSimpleViewFragmentTest.java:745)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testIsHidden FAILED
+    java.lang.AssertionError: expected:<true> but was:<false>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testIsHidden(GpsSimpleViewFragmentTest.java:717)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetParentFragmentManager FAILED
+    java.lang.AssertionError: expected:<null> but was:<mFragmentManager>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetParentFragmentManager(GpsSimpleViewFragmentTest.java:651)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testRequestToggleLogging FAILED
+    org.mockito.exceptions.misusing.MissingMethodInvocationException:
+    when() requires an argument which has to be 'a method call on a mock'.
+    For example:
+        when(mock.getArticles()).thenReturn(articles);
+    Also, this error might show up because:
+    1. you stub either of: final/private/equals()/hashCode() methods.
+       Those methods *cannot* be stubbed/verified.
+       Mocking methods declared on non-public parent classes is not supported.
+    2. inside when() you don't call method on mock but on some other object.
+        at app//com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testRequestToggleLogging(GpsSimpleViewFragmentTest.java:439)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testSetSatelliteCount FAILED
+    java.lang.NullPointerException: Cannot invoke "android.widget.ImageView.clearColorFilter()" because "imgView" is null
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.setColor(GpsSimpleViewFragment.java:212)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.setSatelliteCount(GpsSimpleViewFragment.java:459)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testSetSatelliteCount(GpsSimpleViewFragmentTest.java:373)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testIsVisible FAILED
+    java.lang.AssertionError: expected:<true> but was:<false>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testIsVisible(GpsSimpleViewFragmentTest.java:711)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetLayoutInflater FAILED
+    java.lang.AssertionError: expected:<null> but was:<mLayoutInflater>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetLayoutInflater(GpsSimpleViewFragmentTest.java:830)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testOnEventMainThread FAILED
+    org.mockito.exceptions.misusing.MissingMethodInvocationException:
+    when() requires an argument which has to be 'a method call on a mock'.
+    For example:
+        when(mock.getArticles()).thenReturn(articles);
+    Also, this error might show up because:
+    1. you stub either of: final/private/equals()/hashCode() methods.
+       Those methods *cannot* be stubbed/verified.
+       Mocking methods declared on non-public parent classes is not supported.
+    2. inside when() you don't call method on mock but on some other object.
+        at app//com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnEventMainThread(GpsSimpleViewFragmentTest.java:234)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetLifecycle FAILED
+    java.lang.AssertionError: expected:<null> but was:<mLifecycleRegistry>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetLifecycle(GpsSimpleViewFragmentTest.java:456)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testOnOptionsItemSelected FAILED
+    java.lang.AssertionError: expected:<true> but was:<false>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnOptionsItemSelected(GpsSimpleViewFragmentTest.java:971)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testInstantiate2 FAILED
+    java.lang.NullPointerException: Cannot invoke "android.content.Context.getClassLoader()" because "context" is null
+        at androidx.fragment.app.Fragment.instantiate(Fragment.java:671)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testInstantiate2(GpsSimpleViewFragmentTest.java:503)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testRequireArguments FAILED
+    java.lang.IllegalStateException: Fragment GpsSimpleViewFragment{faff2bf} (1d8ebf34-4bef-44f6-b64e-6c682acb0d60) does not have any arguments.
+        at androidx.fragment.app.Fragment.requireArguments(Fragment.java:803)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testRequireArguments(GpsSimpleViewFragmentTest.java:550)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testHashCode FAILED
+    java.lang.AssertionError: expected:<0> but was:<731816460>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:647)
+        at org.junit.Assert.assertEquals(Assert.java:633)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testHashCode(GpsSimpleViewFragmentTest.java:516)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testIsResumed FAILED
+    java.lang.AssertionError: expected:<true> but was:<false>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testIsResumed(GpsSimpleViewFragmentTest.java:705)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testEquals FAILED
+    java.lang.AssertionError: expected:<true> but was:<false>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testEquals(GpsSimpleViewFragmentTest.java:510)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testOnCreateContextMenu FAILED
+    java.lang.IllegalStateException: Fragment GpsSimpleViewFragment{411db18d} (ec39d212-4728-4e22-b606-0cc55a863c80) not attached to an activity.
+        at androidx.fragment.app.Fragment.requireActivity(Fragment.java:1000)
+        at androidx.fragment.app.Fragment.onCreateContextMenu(Fragment.java:2449)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnCreateContextMenu(GpsSimpleViewFragmentTest.java:981)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetTag FAILED
+    java.lang.AssertionError: expected:<replaceMeWithExpectedResult> but was:<null>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetTag(GpsSimpleViewFragmentTest.java:534)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetChildFragmentManager FAILED
+    java.lang.AssertionError: expected:<null> but was:<mChildFragmentManager>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetChildFragmentManager(GpsSimpleViewFragmentTest.java:663)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testOnCreateView FAILED
+    org.mockito.exceptions.misusing.MissingMethodInvocationException:
+    when() requires an argument which has to be 'a method call on a mock'.
+    For example:
+        when(mock.getArticles()).thenReturn(articles);
+    Also, this error might show up because:
+    1. you stub either of: final/private/equals()/hashCode() methods.
+       Those methods *cannot* be stubbed/verified.
+       Mocking methods declared on non-public parent classes is not supported.
+    2. inside when() you don't call method on mock but on some other object.
+        at app//com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnCreateView(GpsSimpleViewFragmentTest.java:131)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetString FAILED
+    java.lang.IllegalStateException: Fragment GpsSimpleViewFragment{5c00b341} (80650a79-9247-4688-978f-ad07207e5f64) not attached to a context.
+        at androidx.fragment.app.Fragment.requireContext(Fragment.java:972)
+        at androidx.fragment.app.Fragment.getResources(Fragment.java:1036)
+        at androidx.fragment.app.Fragment.getString(Fragment.java:1058)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetString(GpsSimpleViewFragmentTest.java:632)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testInstantiate FAILED
+    java.lang.NullPointerException: Cannot invoke "android.content.Context.getClassLoader()" because "context" is null
+        at androidx.fragment.app.Fragment.instantiate(Fragment.java:671)
+        at androidx.fragment.app.Fragment.instantiate(Fragment.java:644)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testInstantiate(GpsSimpleViewFragmentTest.java:497)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testIsAdded FAILED
+    java.lang.AssertionError: expected:<true> but was:<false>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testIsAdded(GpsSimpleViewFragmentTest.java:681)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testOnWaitingForLocation FAILED
+    java.lang.NullPointerException: Cannot invoke "android.content.res.Resources.getColor(int)" because the return value of "android.content.Context.getResources()" is null
+        at androidx.core.content.ContextCompat.getColor(ContextCompat.java:580)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.setActionButtonStop(GpsSimpleViewFragment.java:125)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragment.onWaitingForLocation(GpsSimpleViewFragment.java:486)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testOnWaitingForLocation(GpsSimpleViewFragmentTest.java:385)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testRequireFragmentManager FAILED
+    java.lang.AssertionError: expected:<null> but was:<mFragmentManager>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testRequireFragmentManager(GpsSimpleViewFragmentTest.java:657)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testSetInitialSavedState FAILED
+    java.lang.IllegalStateException: Fragment already added
+        at androidx.fragment.app.Fragment.setInitialSavedState(Fragment.java:833)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testSetInitialSavedState(GpsSimpleViewFragmentTest.java:562)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetSharedElementReturnTransition FAILED
+    java.lang.AssertionError: expected:<replaceMeWithExpectedResult> but was:<null>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetSharedElementReturnTransition(GpsSimpleViewFragmentTest.java:1073)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetEnterTransition FAILED
+    java.lang.AssertionError: expected:<replaceMeWithExpectedResult> but was:<null>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetEnterTransition(GpsSimpleViewFragmentTest.java:1018)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetViewLifecycleOwnerLiveData FAILED
+    java.lang.AssertionError: expected:<null> but was:<mViewLifecycleOwnerLiveData>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetViewLifecycleOwnerLiveData(GpsSimpleViewFragmentTest.java:468)
+com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest > testGetFragmentManager FAILED
+    java.lang.AssertionError: expected:<null> but was:<mFragmentManager>
+        at org.junit.Assert.fail(Assert.java:89)
+        at org.junit.Assert.failNotEquals(Assert.java:835)
+        at org.junit.Assert.assertEquals(Assert.java:120)
+        at org.junit.Assert.assertEquals(Assert.java:146)
+        at com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest.testGetFragmentManager(GpsSimpleViewFragmentTest.java:645)
+138 tests completed, 77 failed
+> Task :gpslogger:testDebugUnitTest FAILED
+
+0 problems were found storing the configuration cache.
+
+See the complete report at file:///C:/Users/adm/Desktop/ES-entrega3/gpslogger/build/reports/configuration-cache/9p5j26pxqrtmtcfez64xjgfkf/dpdy7kg3qlrxh8ags5zi3zbyo/configuration-cache-report.html
+FAILURE: Build failed with an exception.
+* What went wrong:
+Execution failed for task ':gpslogger:testDebugUnitTest'.
+> There were failing tests. See the report at: file:///C:/Users/adm/Desktop/ES-entrega3/gpslogger/gpslogger/build/reports/tests/testDebugUnitTest/index.html
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+* Get more help at https://help.gradle.org
+BUILD FAILED in 3s
+19 actionable tasks: 2 executed, 17 up-to-date
+Configuration cache entry stored.
+18:53:04: Execution finished ':gpslogger:testDebugUnitTest --tests "com.mendhak.gpslogger.ui.fragments.display.GpsSimpleViewFragmentTest"'.
