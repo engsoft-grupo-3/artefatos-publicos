@@ -1,0 +1,49 @@
+O problema principal que você está enfrentando nos seus testes parece ser uma falha de inicialização da classe
+`PreferenceHelper`, resultando em um erro de `NullPointerException`. O erro ocorre porque o objeto `preferenceHelper`
+não está sendo instanciado corretamente nos métodos de teste, e por isso, quando o código tenta chamar qualquer método
+dessa instância, o erro acontece.
+
+Aqui estão alguns passos para resolver o problema:
+
+### 1. Verifique a Instanciação do `PreferenceHelper`
+Nos seus testes, é possível que a instância da classe `PreferenceHelper` não esteja sendo corretamente configurada ou
+inicializada. Certifique-se de que, antes de cada teste, o objeto `preferenceHelper` seja criado. Por exemplo, você
+pode usar a anotação `@Before` para inicializar o objeto antes de cada método de teste:
+
+```java
+private PreferenceHelper preferenceHelper;
+
+@Before
+public void setUp() {
+    preferenceHelper = new PreferenceHelper(context); // Aqui você passa o contexto correto
+}
+```
+
+### 2. Injeção de Dependências
+Se a classe `PreferenceHelper` depende de algum contexto ou serviço, como um `Context` do Android ou algum outro
+serviço de configuração, você precisará fornecer esses objetos de maneira apropriada nos seus testes. Você pode usar
+frameworks como Mockito para "mockar" essas dependências:
+
+```java
+@Mock
+Context mockContext;
+
+@Before
+public void setUp() {
+    MockitoAnnotations.initMocks(this);
+    preferenceHelper = new PreferenceHelper(mockContext);
+}
+```
+
+### 3. Verifique o Método `getInstance()`
+Outro ponto a ser analisado é o método `getInstance()` da classe `PreferenceHelper`. Pelo erro, parece que este método
+está retornando nulo. Isso pode indicar que o método `getInstance()` não está configurado corretamente ou depende de
+alguma inicialização anterior. Certifique-se de que esse método esteja sendo testado de maneira isolada ou que seja
+mockado se necessário.
+
+### 4. Inicialize Objetos Compartilhados Corretamente
+Se o objeto `PreferenceHelper` é um singleton ou precisa de uma inicialização especial, assegure-se de que ele esteja
+sendo criado de forma correta no ambiente de teste.
+
+Por fim, faça esses ajustes e rode novamente os testes. Isso deverá resolver os problemas relacionados ao
+`NullPointerException`.
